@@ -1,0 +1,139 @@
+#tablepage-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 50px;
+    margin-left: 27px;
+    margin-top: 27px;
+    grid-area: "table canvas";
+}
+
+#league-standing-filter {
+    padding: 12px 16px;
+}
+
+#league-standings {
+    box-shadow: $box-shadow;
+}
+
+.clickable-row {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+$positions-cl: 1, 2, 3;
+$position-neutral: 17;
+$position-down: 18, 19, 20;
+
+@each $position in $positions-cl {
+    #pos-id-#{$position} {
+        border-left: 2px solid rgb(15, 75, 15);
+    }
+}
+
+#pos-id-4 {
+    border-left: 2px solid rgb(32, 30, 139);
+}
+
+@for $i from 5  through $position-neutral {
+    #pos-id-#{$i} {
+        border-left: 2px solid rgb(175, 175, 175);
+    }
+}
+
+@each $position in $position-down {
+    #pos-id-#{$position} {
+        border-left: 2px solid rgb(129, 24, 24);
+    }
+}
+
+.team-progress-container{
+    grid-area: 1 / 2 / 2 / 3;
+    display: grid;
+    grid-template-rows: max-content max-content auto;
+    grid-template-columns: 500px auto;
+}
+.team-prog-info {
+    position: sticky;
+    top:0;
+    min-height: 300px;
+}
+
+#team-progress-graph {
+    margin-right: 27px;
+    margin-bottom: 27px;
+    width: 420px;
+    height: 300px;
+}
+
+.team-form {
+    min-height: 34px;
+    margin-bottom: 27px;
+    color: $text-color;
+    display: grid;
+    grid-area: 2 / 1 / 3 / 2;
+    grid-template-columns: repeat(5, 40px);
+    grid-template-rows: max-content max-content;
+    position: sticky;
+    justify-self: center;
+}
+
+.team-form-cont{
+    padding: 5px;
+    color: $text-color;
+    border-radius:50%;
+    margin-right: 5px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    align-self: start
+}
+
+#team-win {
+    background-color: #1fab10;
+}
+
+#team-draw {
+    background-color: #76766f;
+}
+
+#team-loss {
+    background-color: #b6161b;
+}
+
+.team-latest-fix {
+    color: $text-color;
+    display: grid;
+    grid-area: 3 / 1 / 4 / 2;
+    grid-template-rows: repeat(5, 40px);
+    position: sticky;
+    align-self: start;
+    justify-content: center;
+    align-items: center;
+}
+
+.team-fixture {
+    display: grid;
+    grid-template-columns: 160px 30px 30px 160px;
+    font-size: 16px;
+}
+
+.team-fixture .team-home {
+    text-align: right;
+}
+
+.team-fixture .teams-score__home {
+    text-align: center;
+    margin-right: 10px;
+    margin-left: 15px;
+}
+
+.team-fixture .teams-score__away {
+    text-align: center;
+    margin-right: 15px;
+    margin-left: 10px;
+}
+
+.team-fixture .team-away {
+    text-align: left;
+}

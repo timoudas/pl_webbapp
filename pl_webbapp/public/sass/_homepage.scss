@@ -1,0 +1,57 @@
+/* Main content Area */
+.home-container {
+    display: grid;
+    grid-area: main;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: auto 1fr 1fr;
+    grid-gap: 73px
+}
+
+
+/* Calender game component */
+.calender-games {
+    display: grid;
+    grid-template-columns: max-content auto;
+    font-size: 18px;
+    color: $text-color;
+    margin-left: 27px;
+    margin-top: 27px;
+    box-shadow : $box-shadow
+
+  }
+
+/* Calender header */
+.calender-header {
+    grid-area: 1/1/2/3;
+    background-color: $body-color;
+    color: $header-color;
+    font-size: 20px;
+  }
+
+/* Calender game-time component */
+.match-time {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    color: $header-color;
+    background-color: $body-color;
+    padding-left: 5px;
+    padding-right: 10px;
+}
+
+.teams {
+    background-color: $body-color;
+    padding-left: 10px;
+    justify-items: center;
+}
+
+/* Home-Page Main Area */
+#player-avg-home {
+    margin-right: 27px;
+    color: $text-color;
+    margin-top: 27px;
+    overflow-y: scroll;
+    max-height: 500px;
+    box-shadow: $box-shadow;
+  }
+  

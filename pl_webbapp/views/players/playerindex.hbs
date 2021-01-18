@@ -1,0 +1,22 @@
+<div class="player-container">
+    <div class="player-section-header defpos">Best Defenders</div>
+    <div class="player-section shadow defender">
+        {{#each defenders}}
+            <div class="player-box-con">
+                <img src="assets/{{this.id}}.png" onerror="this.onerror=null;this.src='assets/Photo-Missing.png';" alt="">
+                <span>{{this.name}}</span>
+            </div>
+        {{/each}}
+    </div>
+    <div class="player-section-header midpos">Best Midfields</div>
+    <div class="player-section shadow midfield">
+
+    </div>
+    <div class="player-section-header forpos">Best Forwards</div>
+    <div class="player-section shadow forward">
+
+    </div>
+</div>
+
+
+
