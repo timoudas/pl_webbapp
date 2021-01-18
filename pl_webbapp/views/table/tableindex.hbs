@@ -1,0 +1,40 @@
+
+ <div class='main-container' id="tablepage-container">
+     <div class="table-main">
+         <div class="filter-container" id="league-standing-filter">
+            <div class="dropdown">
+                <button class="dropbtn" id="seasonDropDownMenyButton">Filter By Season</button>
+                <div class="dropdown-content" id="seasonToggle">
+                    {{#each seasons}}
+                        <button class="dropdown-item" value={{this._id}}>{{this.SeasonLabel}}</button>
+                    {{/each}}
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn" id="homeAwayDropDownMenyButton">Filter by Home or Away</button>
+                <div class="dropdown-content" id="homeAwayToggle">
+                    <button class="dropdown-item" value="overall">All Matches</button>
+                    <button class="dropdown-item" value="home">Home</button>
+                    <button class="dropdown-item" value="away">Away</button>
+                </div>
+            </div>
+         </div>
+         <table class="table" id="league-standings">
+            <thead>
+                {{> leagueTableHeader}}
+            </thead>
+            <tbody id='league-table-rows'>
+                    {{#each result}}
+                        {{> leagueTableBody this}}
+                    {{/each}}
+            </tbody>
+         </table>
+     </div>
+     <div class="team-progress-container">
+         <div class="team-prog-info">
+            <canvas id="team-progress-graph"></canvas>
+         </div>
+         <div class="team-form"></div>
+         <div class="team-latest-fix"></div>
+     </div>
+</div>

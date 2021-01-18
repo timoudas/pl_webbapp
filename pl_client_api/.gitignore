@@ -1,0 +1,8 @@
+*.png
+cli_stats/raw_data/
+__pycache__/
+*.pyc
+*.pyo
+
+rest_server/
+profile/

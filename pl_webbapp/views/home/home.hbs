@@ -1,0 +1,58 @@
+
+<div class='home-container'>
+    <div class='calender-games'>
+        <div class="calender-header">
+            <span>Schedule</span>
+        </div>
+        {{#each schedule}}
+            <div class="match-time">
+                <span>{{this.dateString}}</span>
+            </div>
+            <div class="teams">
+                <div class="home">
+                    {{this.teams.0.team.shortName}}
+                </div>
+                <div class="away">
+                    {{this.teams.1.team.shortName}}
+                </div>
+            </div>
+        {{/each}}
+    </div>
+    <div class="stats-container" id="player-avg-home">
+        <div class="filter-container">
+            <input type="text" id="filter0" placeholder="Filter By Name">
+            <input type="text" id="filter1" placeholder="Filter By Club">
+            <input type="text" id="filter2" placeholder="Filter By Position">
+            <div class="dropdown">
+                <button class="dropbtn">Change Stats Type</button>
+                <div class="dropdown-content">
+                    <button class="stats-item" value="1">Passes</button>
+                    <button class="stats-item" value="2">Shots</button>
+                    <button class="stats-item" value="3">Tackles</button>
+                </div>
+            </div>
+        </div>
+        <table id="filter" class="table">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Club</th>
+                    <th>Position</th>
+                    <th id='stats-placehld'>AvgShots</th>
+                    <th id="stats-placehld1">AvgOnTarget</th>
+                </tr>
+            </thead>
+            <tbody id="playerStatsAvg">
+                {{#each shots}}
+                    <tr>
+                        <td>{{this.name}}</td>
+                        <td>{{this.teamName}}</td>
+                        <td>{{this.position}}</td>
+                        <td>{{this.averageShotsPerGame}}</td>
+                        <td>{{this.averageShotsOnTarget}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
