@@ -1,0 +1,50 @@
+<html lang="en">
+<head>
+    <!-- <meta> tags> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/app.css">
+    <title>PL</title>
+</head>
+
+<body>
+    <div class="grid-container">
+        {{> header}}
+        {{> sidenav}}
+        {{> header}}
+        <main class="main">
+            {{{body}}}
+        </main>
+        {{> footer}}
+
+    </div>
+
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- Handlebars JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+    {{!-- Chart JS --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/client.js" defer ></script>
+    {{!-- Table Filter --}}
+    <script src="js/TableFilter.min.js" defer ></script>
+    {{!-- live reloading --}}
+    <script src="/reload/reload.js"></script> 
+    {{!-- Web-Socket --}}
+    <script src="/socket.io/socket.io.js"></script>
+    <script>  
+        var socket = io();
+        $('.spc-btn').bind('click', function(event){
+            socket.emit('btn-press', event.timeStamp)
+        })
+        socket.on('sending-back', function(msg){
+            alert(msg)
+        })
+    </script>
+</body>
+</html>
