@@ -1,7 +1,6 @@
 /* Assign grid instructions to our parent grid container */
 .grid-container {
     font-family: Sans-serif;
-    height: 100%;
     display: grid;
     grid-template-columns: 200px 1fr;
     grid-template-rows: 50px 1fr 50px;
@@ -27,6 +26,17 @@
 }
 .header {
   grid-area: header;
+  button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    height: 40px;
+    width: 40px;
+    img {
+        height: inherit;
+        width: inherit;
+    }
+  }
 }
 
 .header, .footer {
@@ -42,12 +52,34 @@
     display: flex; /* Will be hidden on mobile */
     flex-direction: column;
     grid-area: sidenav;
-    background-color: $sidenav-color
+    background-color: $sidenav-color;
+    visibility: visible;
+    transition:visibility 1s linear
 }
 
+.sidenav__icon {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    button {
+            grid-area: 1 / 3 / 2 / 4;
+            height: 30px;
+            width: 30px;
+            justify-self: right;
+            margin-top: 10px;
+            margin-right: 10px;
+            background-color: inherit;
+            border: none;
+            outline: none;
+            img {
+                height: inherit;
+                width: inherit;
+                margin-right: inherit;
+            }
+    }
+}
 .sidenav__list {
     padding: 0;
-    margin-top: 85px;
+    margin-top: 65px;
     list-style-type: none;
 }
 

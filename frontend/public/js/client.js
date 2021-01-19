@@ -8,12 +8,37 @@ var secondiv = $(".team-form");
 var thirdiv = $(".team-latest-fix");
 const fheight = firstdiv.outerHeight(true);
 const sheight = secondiv.outerHeight(true);
-console.log(fheight)
-console.log(sheight)
-console.log(secondiv)
 secondiv.css({ top: `${fheight}px`})
 thirdiv.css({top: `${fheight+sheight}px`})
 
+/**
+ * Collapsable Sidebar
+ */
+$(document).on("click", ".sidenav__button", function() {
+    if (($('.sidenav').css("visibility") == "visible")){
+        closeNav()
+    }
+})
+
+$(document).on("click", ".header__button", function() {
+    if ($('.sidenav').css("visibility") == "hidden"){
+        openNav()
+    }
+})
+
+function closeNav() {
+    $('.sidenav').css({'visibility': 'hidden'})
+    $('.header').css({'grid-area': '1 / 1 / 2 / -1'})
+    $('.main').css({'grid-area': '2 / 1 / -1 / -1'})
+    $('.footer').css({'grid-area': '-2 / 1 / -1 / -1'})
+  }
+
+function openNav() {
+    $('.sidenav').css({'visibility': 'visible'})
+    $('.header').css({'grid-area': '1 / 2 / 2 / -1'})
+    $('.main').css({'grid-area': '2 / 2 / -1 / -1'})
+    $('.footer').css({'grid-area': '-2 / 2 / -1 / -1'})
+  }
 
 // Chart Variables
 var teamProgressChart
