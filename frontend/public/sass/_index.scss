@@ -1,14 +1,19 @@
 /* Assign grid instructions to our parent grid container */
+html,body {
+    height: 100vh;
+    margin: 0;
+  }
 .grid-container {
+    height:auto;
     font-family: Sans-serif;
     display: grid;
     grid-template-columns: 200px 1fr;
     grid-template-rows: 50px 1fr 50px;
     grid-auto-columns: minmax(min-content, max-content);
     grid-template-areas:
-      "sidenav header"
+      "sidenav headers"
       "sidenav main"
-      "sidenav footer";
+      "sidenav main";
 }
 
 .sidenav {
@@ -25,7 +30,8 @@
     grid-area: footer;
 }
 .header {
-  grid-area: header;
+    grid-area: headers;
+
   button {
     background-color: inherit;
     border: none;
