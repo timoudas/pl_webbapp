@@ -121,7 +121,6 @@ async function getKeyPassPlayers(){
         'teamId': 1
     })
 
-    console.log(data)
     return data
 }
 

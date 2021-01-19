@@ -16,7 +16,6 @@ var seasonLabel = async () => {
     const result = await utils.latestSeasonLabel()   
     return result
 }
-
   
 /**
  * Displays a start page.

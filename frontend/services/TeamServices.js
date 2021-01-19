@@ -172,5 +172,4 @@ async function rankTeams(){
         'avgPosition': {'$round': [ '$avgPosition', 1] },
         '_id': 0
     })
-    console.log(data)
 }
