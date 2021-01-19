@@ -12,7 +12,7 @@ secondiv.css({ top: `${fheight}px`})
 thirdiv.css({top: `${fheight+sheight}px`})
 
 /**
- * Collapsable Sidebar
+ * Collapsable Sidebar - Close
  */
 $(document).on("click", ".sidenav__button", function() {
     if (($('.sidenav').css("visibility") == "visible")){
@@ -20,6 +20,9 @@ $(document).on("click", ".sidenav__button", function() {
     }
 })
 
+/**
+ * Collabsable Sidebar - Open
+ */
 $(document).on("click", ".header__button", function() {
     if ($('.sidenav').css("visibility") == "hidden"){
         openNav()
