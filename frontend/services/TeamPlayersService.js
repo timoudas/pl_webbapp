@@ -249,6 +249,17 @@ async function getBestShotPlayers(){
 }
 
 async function getBestDef(){
+
+    /**
+     * let dataIsPresence = file(../data/playerFile.json)
+     * 
+     * if (dataIsPresence) {
+     *    return dataIsPresence
+     * } else {
+     *  ...
+     * }
+     */
+
     var season = await utils.latestSeasonId()
     var data = await PlayerStatsModel.aggregate()
     .match({
@@ -282,6 +293,11 @@ async function getBestDef(){
         'id': 1,
     })
     .limit(15)
+
+    /**
+     * if !dataIsPresence => data.writeToFile(../data/playerFile.json)
+     */
+
     return(data)
 }
 
