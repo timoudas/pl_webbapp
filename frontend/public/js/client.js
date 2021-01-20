@@ -1,6 +1,36 @@
 // Using .html in jQuery big NO NO: https://medium.com/@jenlindner22/the-risk-of-innerhtml-3981253fe217, switched to .text
 
+/**
+ * JS to fill .stats-player
+ */
+$(document).ready(function(){
+    $(document).on("click", "#player-clickable-row", function() {
+        const playerId = $(this).attr('value')
+        $("#player-portrait").attr("src",`assets/${playerId}.png`);
+        console.log(playerId)
+        $.ajax({
+            type: 'POST',
+            url: `/${playerId}?` + $.param({ playerId: playerId}),
+            success: (data) => {    
+                var playerInfo = data[0]
+                $('.player-info').empty()
+                $('.player-name').text(`${playerInfo.Name}`)
+                $('.player-name').attr("value", (`${playerInfo.id}`))
 
+                playerInfoHTML = 
+                `<div class="p-hinfo-field">Club</div>
+                <div class="p-info-field" value=${playerInfo.teamId}>${playerInfo.Club}</div>
+                <div class="p-hinfo-field">Position</div>
+                <div class="p-info-field">${playerInfo.PositionInfo}</div>
+                <div class="p-hinfo-field">Appearances</div>
+                <div class="p-info-field">${playerInfo.Appearances}</div>
+                <div class="p-hinfo-field">Country</div>
+                <div class="p-info-field">${playerInfo.Country}</div>`
+                $('.player-info').append(playerInfoHTML)
+            }
+        })
+    })
+})
 
 /**
  * Collapsable Sidebar - Close

@@ -5,6 +5,7 @@ const { FixtureStatsModel } = require("../models/FixtureStats");
 const utils = require('../services/utils.js')
 
 module.exports = {
+    getPlayersInfo,
     getKeyPassPlayers,
     getBestShotPlayers,
     getPlayers,
@@ -13,8 +14,44 @@ module.exports = {
     getBestAtt,
 }
 
+/**
+ * 
+ * @param {Integer} playerId | Get basic info for player
+ */
+async function getPlayersInfo(playerId){
+    var season = await utils.latestSeasonId()
+    var data = await PlayerStatsModel.aggregate()
+    .match({
+        'seasonId': season,
+        'id': parseInt(playerId)
+    })
+    .lookup({
+        'from': 'team_squads',
+        'let': {'id': '$id', 'seasonId': '$seasonId'},
+        'pipeline': [
+            { '$match': {"$expr": { '$eq': [ "$seasonId", "$$seasonId" ] } } },
+            { "$unwind": "$players" },
+            { "$match": { "$expr": { "$eq": ["$players.p_id", "$$id"] } } },
+         ],
+        'as': 'player_stats'
+    })
+    .unwind(
+        'player_stats'
+    )
+    .project({
+        'id': 1,
+        'Age': '$age',
+        'Country': '$country',
+        'Name': '$name',
+        'PositionInfo': '$positionInfo',
+        'Appearances': '$appearances',
+        'Club': '$player_stats.teamShortName',
+        'teamId': '$player_stats.teamId',
+        '_id': 0
 
-
+    })
+    return data
+}
 
 /**
  * 

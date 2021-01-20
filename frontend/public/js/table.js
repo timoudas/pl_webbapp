@@ -1,12 +1,16 @@
-
 /**
  * JS to fill .stats-player
  */
 $(document).on("click", "#player-clickable-row", function() {
-    const parentDiv = $(".player-stats")
-    const imgDiv = $(".player-img")
     const playerId = $(this).attr('value')
-    getPlayerImg(playerId)
+    $("#player-portrait").attr("src",`assets/${playerId}.png`);
+    $.ajax({
+        type: 'POST',
+        url: `/${playerId}?` + $.param({ playerId: playerId}),
+        success: (filteredSeasonValues) => {    
+            console.log(filteredSeasonValues)
+        }
+    })
 })
 
 function getPlayerImg(playerId){
