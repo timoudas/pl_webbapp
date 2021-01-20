@@ -209,6 +209,8 @@ class StatShell(cmd.Cmd):
                 if value == True:
                     file_suffix = self.FILE_NAMES.get(key)
                     file_name = f'{file_prefix}{file_suffix}'
+                    if not dir.check_if_file_exist(StorageConfig.DB_DIR):
+                        dir.mkdir(StorageConfig.DB_DIR)
                     dir.save_json(file_name, self.loading_choices(key, league, season), StorageConfig.DB_DIR)
                     print(f'{file_name} was saved')
             except FileExistsError:
