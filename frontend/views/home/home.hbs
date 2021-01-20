@@ -45,7 +45,7 @@
             <tbody id="playerStatsAvg">
                 {{#each shots}}
                     <tr>
-                        <td id="player-clickable-row">{{this.name}}</td>
+                        <td id="player-clickable-row" value={{this.id}}>{{this.name}}</td>
                         <td>{{this.teamName}}</td>
                         <td>{{this.position}}</td>
                         <td>{{this.averageShotsPerGame}}</td>
@@ -54,5 +54,12 @@
                 {{/each}}
             </tbody>
         </table>
+    </div>
+    <div class="stats-player">
+        <div class="player-img"></div>
+        <div class="player-info"></div>
+        <div class="player-dist-graph"></div>
+        <div class="player-avg-stats"></div>
+
     </div>
 </div>

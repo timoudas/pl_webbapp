@@ -241,7 +241,7 @@ function homeTableToggle(event){
                 for(let i = 0; i < 50; i++) {
                     let filteredTr = newVals[i]
                     let newHtml = `<tr>
-                    <td id="player-clickable-row">${filteredTr.name}</td>
+                    <td id="player-clickable-row" value=${filteredTr.id}>${filteredTr.name}</td>
                     <td>${filteredTr.teamName}</td>
                     <td>${filteredTr.position}</td>
                     <td>${filteredTr.averagePlaytime}</td>
@@ -263,7 +263,7 @@ function homeTableToggle(event){
                 for(let i = 0; i < 50; i++) {
                     let filteredTr = newVals[i]
                     let newHtml = `<tr>
-                    <td id="player-clickable-row">${filteredTr.name}</td>
+                    <td id="player-clickable-row" value=${filteredTr.id}>${filteredTr.name}</td>
                     <td>${filteredTr.teamName}</td>
                     <td>${filteredTr.position}</td>
                     <td>${filteredTr.averageShotsPerGame}</td>
