@@ -52,6 +52,12 @@ var typeSelection = $('#homeAwayToggle').children(":first").val()
 var MatchweekSelection = $('#homeAwayToggle').children(":first").val()
 // var leagueTableUpdateTimeStamp = 0
 
+/**
+ * 
+ * @param {Array} fixtures | Array that contains objects with fixtures
+ * @param {HTML} div | Target element
+ * Function to create win/draw/loss div
+ */
 function teamLatestFixtures(fixtures, div){
     $(div).empty()
     for (var i = 0; i < 5; i++){
@@ -235,7 +241,7 @@ function homeTableToggle(event){
                 for(let i = 0; i < 50; i++) {
                     let filteredTr = newVals[i]
                     let newHtml = `<tr>
-                    <td>${filteredTr.name}</td>
+                    <td id="player-clickable-row">${filteredTr.name}</td>
                     <td>${filteredTr.teamName}</td>
                     <td>${filteredTr.position}</td>
                     <td>${filteredTr.averagePlaytime}</td>
@@ -257,7 +263,7 @@ function homeTableToggle(event){
                 for(let i = 0; i < 50; i++) {
                     let filteredTr = newVals[i]
                     let newHtml = `<tr>
-                    <td>${filteredTr.name}</td>
+                    <td id="player-clickable-row">${filteredTr.name}</td>
                     <td>${filteredTr.teamName}</td>
                     <td>${filteredTr.position}</td>
                     <td>${filteredTr.averageShotsPerGame}</td>
