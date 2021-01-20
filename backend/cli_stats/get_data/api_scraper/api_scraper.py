@@ -2,7 +2,7 @@ import re
 import requests
 
 import sys
-sys.path.append('cli_stats')
+sys.path.append('../../../cli_stats')
 
 from directory import Directory
 
