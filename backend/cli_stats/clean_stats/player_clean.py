@@ -34,7 +34,7 @@ def read_playerinfo(data):
                 {'age' : stats.get('age'),
                 'id' : stats.get('id'),
                 'seasonId' : stats.get('seasonId'),
-                'seasonLabelcle' : stats.get('seasonLabel'),
+                'seasonLabel' : stats.get('seasonLabel'),
                 'birth' : deep_get(stats, 'birth.date.label'),
                 'birthExact' : deep_get(stats, 'birth.date.millis'),
                 'country' : deep_get(stats, 'birth.country.country'),
