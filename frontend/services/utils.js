@@ -1,4 +1,5 @@
 const { LeagueStandingsModel } = require("../models/LeagueStanding");
+const fs = require("fs")
 const { spawn } = require('child_process');
 const axios = require('axios');
 
@@ -10,14 +11,47 @@ let config = {
   }
 
 
-
-
 module.exports = {
     latestSeasonId,
     latestSeasonLabel,
     getSeasons,
     updateData,
+    writeData
 }
+
+/**
+ * 
+ * @param {string} filename | filename, e.g. schedule.json
+ */
+async function dataExists(fileName){
+    let dataDir = `./data/${fileName}`
+    let date = new Date().getTime() + (1 * 24 * 60 * 60 * 1000)
+    try {
+        file = await fs.promises.stat(dataDir)
+            if (file.birthtimeMs < date){
+                console.log('hi')
+                data = await JSON.parse(await loadData(dataDir)) 
+                return data
+            } else{ 
+                return false
+            }
+    } catch {
+        return false
+    }
+}
+
+
+async function loadData(fileName){
+    data = await fs.promises.readFile(fileName)
+    return data
+}
+
+async function writeData(fileName, data){
+    data = await JSON.stringify(data, null, 4);
+    await fs.promises.writeFile(fileName, data);
+    console.log(`${fileName} saved`)
+}
+
 
 /**
  * Get latest seasonId
@@ -80,5 +114,4 @@ async function getSeasons() {
     })
     return data
 }
-
 
