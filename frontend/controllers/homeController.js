@@ -39,7 +39,6 @@ homeController.filterHandler = async function (req,res){
 homeController.playerHandler = async function(req, res){
     var queryval = req.query.playerId
     var playerInfo = await TeamPlayersServices.getPlayersInfo(queryval)
-    console.log(playerInfo)
     res.json(playerInfo)
     res.end()
 }

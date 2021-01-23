@@ -18,6 +18,7 @@ module.exports = {
  * 
  * @param {Integer} playerId | Get basic info for player
  */
+
 async function getPlayersInfo(playerId){
     var season = await utils.latestSeasonId()
     
@@ -134,7 +135,6 @@ async function getPlayersInfo(playerId){
             avgShotsOnTarget: +(cumShotsOnTarget / index).toFixed(1),
         });
     })
-    console.log(data)
     return data
 }
 

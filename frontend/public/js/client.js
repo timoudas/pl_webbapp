@@ -1,8 +1,22 @@
 // Using .html in jQuery big NO NO: https://medium.com/@jenlindner22/the-risk-of-innerhtml-3981253fe217, switched to .text
+// var sma = require('sma');
 
 /**
  * JS to fill .stats-player
  */
+var SMA = function(valueArr, points){
+    var targetArr = []
+    for (var i = 0; i < valueArr.length; i++){
+        var mean = +((valueArr[i] + valueArr[i-1] + valueArr[i+1])/3.0).toFixed(1);
+        if (!isNaN(mean)){
+            targetArr.push(mean);
+        }else{
+            targetArr.push(valueArr[i])
+        }     
+    }
+    return targetArr
+}
+
 $(document).ready(function(){
     $(document).on("click", "#player-clickable-row", function() {
         const playerId = $(this).attr('value')
@@ -28,9 +42,116 @@ $(document).ready(function(){
                 <div class="p-info-field">${playerInfo.Country}</div>`
                 $('.player-info').append(playerInfoHTML)
 
+                var labels = []
+
+                var avgPassArr = []
+                var totPassArr = []
+                var passArr = []
+
+                var avgShotsArr = []
+                var avgShotsOnArr = []
+                var totShotsArr = []
+                var shotsArr = []
+                var shotsOnArr = []
+
+                var avgMinsPlayed = []
+                var totMinsPlayed = []
+
                 for (var i = 0; i < data.length; ++i){
-                    console.log(data[i].totalPass)
+                    avgPassArr.push(data[i].avgPass)
+                    avgShotsArr.push(data[i].avgShots)
+                    avgShotsOnArr.push(data[i].averageShotsOnTarget)
+                    totShotsArr.push(data[i].totalShots)
+                    totPassArr.push(data[i].totalPass)
+                    avgMinsPlayed.push(data[i].avgMinsPlayed)
+                    totMinsPlayed.push(data[i].totalMinsPlayed)
+                    passArr.push(data[i].pass)
+                    shotsArr.push(data[i].shots)
+                    shotsOnArr.push(data[i].shotsOnTarget)
+                    labels.push(data[i].gameWeek)
                 }
+
+                var SMA3Pass = SMA(passArr, 3)
+                var SMA3Shots = SMA(shotsArr, 3)
+                var SMA3ShotsOn = SMA(shotsOnArr, 3)
+                
+                var ctx = document.getElementById('player-avg-pass').getContext('2d');
+                teamProgressChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: "avgPass",
+                                fillColor: "rgba(172, 26, 26, 0.9)",
+                                strokeColor: "rgba(172, 26, 26, 0.9)",
+                                pointColor: "rgba(172, 26, 26, 0.9)",
+                                borderColor: "rgba(14, 86, 168, 0.9)",   
+                                fill: false,
+        
+                                data: avgPassArr,
+                            },
+                            {
+                                label: "SMA3Pass",
+                                fillColor: "rgba(0,0,0,0)",
+                                strokeColor: "rgba(220,220,220,1)",
+                                pointColor: "rgba(200,122,20,1)",
+                                borderColor: "rgba(43, 87, 29, 0.9)",
+                                fill: false,
+        
+                                data: SMA3Pass,
+                            },
+                        ]
+                    }
+                })
+                var ctx = document.getElementById('player-avg-shot').getContext('2d');
+                teamProgressChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: "avgShot",
+                                fillColor: "rgba(172, 26, 26, 0.9)",
+                                strokeColor: "rgba(172, 26, 26, 0.9)",
+                                pointColor: "rgba(172, 26, 26, 0.9)",
+                                borderColor: "rgba(14, 86, 168, 0.9)",   
+                                fill: false,
+        
+                                data: avgShotsArr,
+                            },
+                            {
+                                label: "SMA3Shot",
+                                fillColor: "rgba(0,0,0,0)",
+                                strokeColor: "rgba(220,220,220,1)",
+                                pointColor: "rgba(200,122,20,1)",
+                                borderColor: "rgba(43, 87, 29, 0.9)",
+                                fill: false,
+        
+                                data: SMA3Shots,
+                            },
+                            {
+                                label: "SMA3ShotOnTarget",
+                                fillColor: "rgba(0,0,0,0)",
+                                strokeColor: "rgba(220,220,220,1)",
+                                pointColor: "rgba(200,122,20,1)",
+                                borderColor: "rgba(197, 202, 8, 0.9)",
+                                fill: false,
+        
+                                data: SMA3ShotsOn,
+                            },
+                        ]
+                    },
+                    options: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                suggestedMax: 8,
+                                stepSize: 1,
+                            }
+                        }]
+                    }
+                })
             }
         })
     })
