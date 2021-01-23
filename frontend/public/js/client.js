@@ -11,12 +11,12 @@ $(document).ready(function(){
         $.ajax({
             type: 'POST',
             url: `/${playerId}?` + $.param({ playerId: playerId}),
-            success: (data) => {    
+            success: (data) => {   
+
                 var playerInfo = data[0]
                 $('.player-info').empty()
                 $('.player-name').text(`${playerInfo.Name}`)
                 $('.player-name').attr("value", (`${playerInfo.id}`))
-
                 playerInfoHTML = 
                 `<div class="p-hinfo-field">Club</div>
                 <div class="p-info-field" value=${playerInfo.teamId}>${playerInfo.Club}</div>
@@ -27,6 +27,10 @@ $(document).ready(function(){
                 <div class="p-hinfo-field">Country</div>
                 <div class="p-info-field">${playerInfo.Country}</div>`
                 $('.player-info').append(playerInfoHTML)
+
+                for (var i = 0; i < data.length; ++i){
+                    console.log(data[i].totalPass)
+                }
             }
         })
     })
