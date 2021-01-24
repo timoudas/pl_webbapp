@@ -5,7 +5,7 @@ const { registerDecorator } = require('handlebars')
 const { Collection } = require('mongoose')
 const LeagueStandingServices = require('../services/LeagueTableServices.js')
 const utils = require('../services/utils.js')
-const teamServices = require('../services/teamServices.js')
+const teamServices = require('../services/TeamServices.js')
 
 
 var seasonId = async () => {
