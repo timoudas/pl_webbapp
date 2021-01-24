@@ -1,15 +1,161 @@
 // Using .html in jQuery big NO NO: https://medium.com/@jenlindner22/the-risk-of-innerhtml-3981253fe217, switched to .text
+// var sma = require('sma');
 
 /**
- * Stick SidePanel in /table
+ * JS to fill .stats-player
  */
-const firstdiv = $(".team-prog-info");
-var secondiv = $(".team-form");
-var thirdiv = $(".team-latest-fix");
-const fheight = firstdiv.outerHeight(true);
-const sheight = secondiv.outerHeight(true);
-secondiv.css({ top: `${fheight}px`})
-thirdiv.css({top: `${fheight+sheight}px`})
+var SMA = function(valueArr, points){
+    var targetArr = []
+    for (var i = 0; i < valueArr.length; i++){
+        var mean = +((valueArr[i] + valueArr[i-1] + valueArr[i+1])/3.0).toFixed(1);
+        if (!isNaN(mean)){
+            targetArr.push(mean);
+        }else{
+            targetArr.push(valueArr[i])
+        }     
+    }
+    return targetArr
+}
+
+$(document).ready(function(){
+    $(document).on("click", "#player-clickable-row", function() {
+        const playerId = $(this).attr('value')
+        $("#player-portrait").attr("src",`assets/${playerId}.png`);
+        console.log(playerId)
+        $.ajax({
+            type: 'POST',
+            url: `/${playerId}?` + $.param({ playerId: playerId}),
+            success: (data) => {   
+
+                var playerInfo = data[0]
+                $('.player-info').empty()
+                $('.player-name').text(`${playerInfo.Name}`)
+                $('.player-name').attr("value", (`${playerInfo.id}`))
+                playerInfoHTML = 
+                `<div class="p-hinfo-field">Club</div>
+                <div class="p-info-field" value=${playerInfo.teamId}>${playerInfo.Club}</div>
+                <div class="p-hinfo-field">Position</div>
+                <div class="p-info-field">${playerInfo.PositionInfo}</div>
+                <div class="p-hinfo-field">Appearances</div>
+                <div class="p-info-field">${playerInfo.Appearances}</div>
+                <div class="p-hinfo-field">Country</div>
+                <div class="p-info-field">${playerInfo.Country}</div>`
+                $('.player-info').append(playerInfoHTML)
+
+                var labels = []
+
+                var avgPassArr = []
+                var totPassArr = []
+                var passArr = []
+
+                var avgShotsArr = []
+                var avgShotsOnArr = []
+                var totShotsArr = []
+                var shotsArr = []
+                var shotsOnArr = []
+
+                var avgMinsPlayed = []
+                var totMinsPlayed = []
+
+                for (var i = 0; i < data.length; ++i){
+                    avgPassArr.push(data[i].avgPass)
+                    avgShotsArr.push(data[i].avgShots)
+                    avgShotsOnArr.push(data[i].averageShotsOnTarget)
+                    totShotsArr.push(data[i].totalShots)
+                    totPassArr.push(data[i].totalPass)
+                    avgMinsPlayed.push(data[i].avgMinsPlayed)
+                    totMinsPlayed.push(data[i].totalMinsPlayed)
+                    passArr.push(data[i].pass)
+                    shotsArr.push(data[i].shots)
+                    shotsOnArr.push(data[i].shotsOnTarget)
+                    labels.push(data[i].gameWeek)
+                }
+
+                var SMA3Pass = SMA(passArr, 3)
+                var SMA3Shots = SMA(shotsArr, 3)
+                var SMA3ShotsOn = SMA(shotsOnArr, 3)
+                
+                var ctx = document.getElementById('player-avg-pass').getContext('2d');
+                teamProgressChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: "avgPass",
+                                fillColor: "rgba(172, 26, 26, 0.9)",
+                                strokeColor: "rgba(172, 26, 26, 0.9)",
+                                pointColor: "rgba(172, 26, 26, 0.9)",
+                                borderColor: "rgba(14, 86, 168, 0.9)",   
+                                fill: false,
+        
+                                data: avgPassArr,
+                            },
+                            {
+                                label: "SMA3Pass",
+                                fillColor: "rgba(0,0,0,0)",
+                                strokeColor: "rgba(220,220,220,1)",
+                                pointColor: "rgba(200,122,20,1)",
+                                borderColor: "rgba(43, 87, 29, 0.9)",
+                                fill: false,
+        
+                                data: SMA3Pass,
+                            },
+                        ]
+                    }
+                })
+                var ctx = document.getElementById('player-avg-shot').getContext('2d');
+                teamProgressChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: "avgShot",
+                                fillColor: "rgba(172, 26, 26, 0.9)",
+                                strokeColor: "rgba(172, 26, 26, 0.9)",
+                                pointColor: "rgba(172, 26, 26, 0.9)",
+                                borderColor: "rgba(14, 86, 168, 0.9)",   
+                                fill: false,
+        
+                                data: avgShotsArr,
+                            },
+                            {
+                                label: "SMA3Shot",
+                                fillColor: "rgba(0,0,0,0)",
+                                strokeColor: "rgba(220,220,220,1)",
+                                pointColor: "rgba(200,122,20,1)",
+                                borderColor: "rgba(43, 87, 29, 0.9)",
+                                fill: false,
+        
+                                data: SMA3Shots,
+                            },
+                            {
+                                label: "SMA3ShotOnTarget",
+                                fillColor: "rgba(0,0,0,0)",
+                                strokeColor: "rgba(220,220,220,1)",
+                                pointColor: "rgba(200,122,20,1)",
+                                borderColor: "rgba(197, 202, 8, 0.9)",
+                                fill: false,
+        
+                                data: SMA3ShotsOn,
+                            },
+                        ]
+                    },
+                    options: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                                suggestedMax: 8,
+                                stepSize: 1,
+                            }
+                        }]
+                    }
+                })
+            }
+        })
+    })
+})
 
 /**
  * Collapsable Sidebar - Close
@@ -43,177 +189,7 @@ function openNav() {
     $('.footer').css({'grid-area': '-2 / 2 / -1 / -1'})
   }
 
-// Chart Variables
-var teamProgressChart
-
-// Get initial value from filters in /table
-var seasonSelection = $('#seasonToggle').children(":first").val()
-var typeSelection = $('#homeAwayToggle').children(":first").val()
-var MatchweekSelection = $('#homeAwayToggle').children(":first").val()
-// var leagueTableUpdateTimeStamp = 0
-
-function teamLatestFixtures(fixtures, div){
-    $(div).empty()
-    for (var i = 0; i < 5; i++){
-        var teamFixHTML =
-        `<div class="team-fixture value="${fixtures[i].fId}">
-            <div class="team-home" value=${fixtures[i].homeTeamId}>${fixtures[i].homeTeam}</div>
-            <div class="teams-score__home">${fixtures[i].homeTeamScore}</div>
-            <div class="teams-score__away">${fixtures[i].awayTeamScore}</div>
-            <div class="team-away" value=${fixtures[i].homeTeamId}>${fixtures[i].awayTeam}</div>
-        </div>`    
-        $(div).append(teamFixHTML)
-    }
-    /* TODO: ADD STYLE */
-}
-
-
-/**
- * 
- * @param {Array} teamForm | Values that indicate W / F / D
- * @param {HTML} div | Target element
- * Function to create win/draw/loss div
- */
-function teamFormDiv(teamForm, div){
-    $(div).empty()
-    for (var i = 0; i < 5; i++){
-        var teamFormHtml
-        switch(teamForm.form[i]){
-            case 'W':
-                teamFormHtml = `<div class='team-form-cont' id="team-win">${teamForm.form[i]}</div>`  
-                break
-            case 'D':
-                teamFormHtml = `<div class='team-form-cont' id="team-draw">${teamForm.form[i]}</div>` 
-                break
-            case 'L':
-                teamFormHtml = `<div class='team-form-cont' id="team-loss">${teamForm.form[i]}</div>` 
-                break
-        }
-        console.log('done')
-        $(div).append(teamFormHtml)
-    }
-}
-
-/**
- * Team progress chart update in /table
- */
-$(document).on("click", ".clickable-row", function() {
-    const teamVal = $(this).attr('value')
-    $.ajax({
-        type: 'POST',
-        url: '/table/team?' + $.param({ teamId: teamVal }),
-        success: (res) => {
-            var teamLastesGames = res.teamGameData
-            var teamForm = res.teamFormData[0]
-            var result = res.teamProgData[0]
-            var points = result.pointsAll
-            var position = result.positionAll
-            var labels = result.gameweeks
-            var team = result.teamName
-            teamFormDiv(teamForm, ".team-form")
-            teamLatestFixtures(teamLastesGames, ".team-latest-fix")
-            // TODO: FIX FOR LOOP TO APPEND ELEMENTS
-            if (teamProgressChart) {
-                teamProgressChart.data.labels = labels
-                teamProgressChart.data.datasets[0].data = points
-                teamProgressChart.data.datasets[1].data = position
-                teamProgressChart.options.title.text = team
-                teamProgressChart.update()
-            } else {
-                    var ctx = document.getElementById('team-progress-graph').getContext('2d');
-                    Chart.defaults.global.defaultFontSize = 16;
-                    teamProgressChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [
-                                {
-                                    label: "Points",
-                                    fillColor: "rgba(0,0,0,0)",
-                                    strokeColor: "rgba(220,220,220,1)",
-                                    pointColor: "rgba(200,122,20,1)",
-                                    borderColor: "rgba(43, 87, 29, 0.9)",
-                                    fill: false,
-            
-                                    data: points,
-                                    yAxisID: 'points'
-                                },
-                                {
-                                    label: "Position",
-                                    fillColor: "rgba(172, 26, 26, 0.9)",
-                                    strokeColor: "rgba(172, 26, 26, 0.9)",
-                                    pointColor: "rgba(172, 26, 26, 0.9)",
-                                    borderColor: "rgba(14, 86, 168, 0.9)",   
-                                    fill: false,
-            
-                                    data: position,
-                                    yAxisID: 'position'
-                                },
-                            ],
-                        },
-                        options: {
-                            title: {
-                                display: true,
-                                text: team
-                            },
-                            scales: {
-                                xAxes: [
-                                    {
-                                        ticks: {
-                                            // fontSize: 24,
-                                            autoSkip: false,
-                                            beginAtZero: true
-                                        }
-                                }
-                                ],
-                                yAxes: [
-                                    {
-                                        id: 'points',
-                                        min: 0,
-                                        position: 'left',
-                                        ticks: {
-                                            // fontSize: 24,
-                                            beginAtZero: true
-                                        }
-                                    },
-                                    {
-                                        id: 'position',
-                                        suggestedMin : 0,
-                                        suggestedMax : 20,
-                                        position: 'right', 
-                                        // ticks: {
-                                        //     fontSize: 24
-                                        // }
-                                    },
-                                    
-                                ]
-                            },
-                            display: false,
-                        },
-                    })
-                }
-        }
-    })
-})
-              
-
-
-
-/**
- * Button to updata data in /table
- */
-$('#updateDataButton').bind('click', function(event){
-    console.log(event.timeStamp)
-    $.ajax({
-        type: 'POST',
-        url: '/table',
-        success: () => {
-            console.log('success')
-            window.location = "/";
-        }
-        
-    })
-});
+  /************************************************************/
 
 /**
  * Click eventlistner for home-page player stats
@@ -235,7 +211,7 @@ function homeTableToggle(event){
                 for(let i = 0; i < 50; i++) {
                     let filteredTr = newVals[i]
                     let newHtml = `<tr>
-                    <td>${filteredTr.name}</td>
+                    <td id="player-clickable-row" value=${filteredTr.id}>${filteredTr.name}</td>
                     <td>${filteredTr.teamName}</td>
                     <td>${filteredTr.position}</td>
                     <td>${filteredTr.averagePlaytime}</td>
@@ -257,7 +233,7 @@ function homeTableToggle(event){
                 for(let i = 0; i < 50; i++) {
                     let filteredTr = newVals[i]
                     let newHtml = `<tr>
-                    <td>${filteredTr.name}</td>
+                    <td id="player-clickable-row" value=${filteredTr.id}>${filteredTr.name}</td>
                     <td>${filteredTr.teamName}</td>
                     <td>${filteredTr.position}</td>
                     <td>${filteredTr.averageShotsPerGame}</td>
@@ -273,63 +249,4 @@ function homeTableToggle(event){
 }
 
 
-//Click eventlistner for all table-filters
-$(document).ready(function() {
-    const selection = document.querySelectorAll(".dropdown-item");
-    selection.forEach(element => {
-    element.addEventListener('click', pickSelection)
-    })
-})
 
-
-function pickSelection(event) {
-    let text = ""
-    switch(event.target.parentElement.id){
-        case 'seasonToggle':
-            text = event.target.textContent
-            $('#seasonvalue').text(text)
-            seasonSelection =  event.target.value
-            break
-        case 'homeAwayToggle':
-            text = event.target.textContent
-            $('#typevalue').text(text)
-            typeSelection =  event.target.value
-            break
-        case 'matchWeekToggle':
-            text = event.target.textContent
-            $('#matchDropDownMenyButton').text(text)
-            MatchweekSelection =  event.target.value
-            break
-    }
-    //Get request for
-    $.ajax({
-        type: 'POST',
-        url: '/table?' + $.param({ seasonVal: seasonSelection, 
-                                typeVal: typeSelection,
-                                matchWeekVal: MatchweekSelection}),
-        success: (filteredSeasonValues) => {          
-            $('#league-table-rows').empty();
-            for(let i = 0; i < 20; i++) {
-                let filteredTr = filteredSeasonValues[i]
-                let newHtml = 
-                `<tr id="pos-id-${i+1}">
-                    <td>${i+1}</td>
-                    <td class="clickable-row" value="${filteredTr.team_id}"> 
-                        <img src='badges/${filteredTr.team_shortName}.png'/>
-                        ${filteredTr.team_shortName}
-                    </td>
-                    <td>${filteredTr.played}</td>
-                    <td>${filteredTr.won}</td>
-                    <td>${filteredTr.drawn}</td>
-                    <td>${filteredTr.lost}</td>
-                    <td>${filteredTr.goalsFor}</td>
-                    <td>${filteredTr.goalsAgainst}</td>
-                    <td>${filteredTr.goalsDifference}</td>
-                    <td>${filteredTr.points}</td>
-                </tr>`
-
-                $('#league-table-rows').append(newHtml)
-            }
-        }
-    })
-}

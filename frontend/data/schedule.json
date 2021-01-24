@@ -1,0 +1,247 @@
+[
+    {
+        "teams": [
+            {
+                "team": {
+                    "name": "Newcastle United",
+                    "club": {
+                        "name": "Newcastle United",
+                        "shortName": "Newcastle",
+                        "abbr": "NEW",
+                        "id": 23
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Newcastle",
+                    "id": 23
+                }
+            },
+            {
+                "team": {
+                    "name": "Leeds United",
+                    "club": {
+                        "name": "Leeds United",
+                        "shortName": "Leeds",
+                        "abbr": "LEE",
+                        "id": 9
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Leeds",
+                    "id": 9
+                }
+            }
+        ],
+        "date": "2021-01-26T18:00:00.000Z",
+        "currentDate": "2021-01-21T20:48:54.728Z",
+        "dateString": "26/01 19:00"
+    },
+    {
+        "teams": [
+            {
+                "team": {
+                    "name": "Brighton and Hove Albion",
+                    "club": {
+                        "name": "Brighton and Hove Albion",
+                        "shortName": "Brighton",
+                        "abbr": "BHA",
+                        "id": 131
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Brighton",
+                    "id": 131
+                }
+            },
+            {
+                "team": {
+                    "name": "Fulham",
+                    "club": {
+                        "name": "Fulham",
+                        "shortName": "Fulham",
+                        "abbr": "FUL",
+                        "id": 34
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Fulham",
+                    "id": 34
+                }
+            }
+        ],
+        "date": "2021-01-26T18:00:00.000Z",
+        "currentDate": "2021-01-21T20:48:54.728Z",
+        "dateString": "26/01 19:00"
+    },
+    {
+        "teams": [
+            {
+                "team": {
+                    "name": "West Bromwich Albion",
+                    "club": {
+                        "name": "West Bromwich Albion",
+                        "shortName": "West Brom",
+                        "abbr": "WBA",
+                        "id": 36
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "West Brom",
+                    "id": 36
+                }
+            },
+            {
+                "team": {
+                    "name": "Manchester City",
+                    "club": {
+                        "name": "Manchester City",
+                        "shortName": "Man City",
+                        "abbr": "MCI",
+                        "id": 11
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Man City",
+                    "id": 11
+                }
+            }
+        ],
+        "date": "2021-01-26T20:15:00.000Z",
+        "currentDate": "2021-01-21T20:48:54.728Z",
+        "dateString": "26/01 21:15"
+    },
+    {
+        "teams": [
+            {
+                "team": {
+                    "name": "Southampton",
+                    "club": {
+                        "name": "Southampton",
+                        "shortName": "Southampton",
+                        "abbr": "SOU",
+                        "id": 20
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Southampton",
+                    "id": 20
+                }
+            },
+            {
+                "team": {
+                    "name": "Arsenal",
+                    "club": {
+                        "name": "Arsenal",
+                        "shortName": "Arsenal",
+                        "abbr": "ARS",
+                        "id": 1
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Arsenal",
+                    "id": 1
+                }
+            }
+        ],
+        "date": "2021-01-26T20:15:00.000Z",
+        "currentDate": "2021-01-21T20:48:54.728Z",
+        "dateString": "26/01 21:15"
+    },
+    {
+        "teams": [
+            {
+                "team": {
+                    "name": "Chelsea",
+                    "club": {
+                        "name": "Chelsea",
+                        "shortName": "Chelsea",
+                        "abbr": "CHE",
+                        "id": 4
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Chelsea",
+                    "id": 4
+                }
+            },
+            {
+                "team": {
+                    "name": "Wolverhampton Wanderers",
+                    "club": {
+                        "name": "Wolverhampton Wanderers",
+                        "shortName": "Wolves",
+                        "abbr": "WOL",
+                        "id": 38
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Wolves",
+                    "id": 38
+                }
+            }
+        ],
+        "date": "2021-01-27T18:00:00.000Z",
+        "currentDate": "2021-01-21T20:48:54.728Z",
+        "dateString": "27/01 19:00"
+    },
+    {
+        "teams": [
+            {
+                "team": {
+                    "name": "Burnley",
+                    "club": {
+                        "name": "Burnley",
+                        "shortName": "Burnley",
+                        "abbr": "BUR",
+                        "id": 43
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Burnley",
+                    "id": 43
+                }
+            },
+            {
+                "team": {
+                    "name": "Aston Villa",
+                    "club": {
+                        "name": "Aston Villa",
+                        "shortName": "Aston Villa",
+                        "abbr": "AVL",
+                        "id": 2
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Aston Villa",
+                    "id": 2
+                }
+            }
+        ],
+        "date": "2021-01-27T18:00:00.000Z",
+        "currentDate": "2021-01-21T20:48:54.728Z",
+        "dateString": "27/01 19:00"
+    },
+    {
+        "teams": [
+            {
+                "team": {
+                    "name": "Crystal Palace",
+                    "club": {
+                        "name": "Crystal Palace",
+                        "shortName": "Crystal Palace",
+                        "abbr": "CRY",
+                        "id": 6
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "Crystal Palace",
+                    "id": 6
+                }
+            },
+            {
+                "team": {
+                    "name": "West Ham United",
+                    "club": {
+                        "name": "West Ham United",
+                        "shortName": "West Ham",
+                        "abbr": "WHU",
+                        "id": 25
+                    },
+                    "teamType": "FIRST",
+                    "shortName": "West Ham",
+                    "id": 25
+                }
+            }
+        ],
+        "date": "2021-01-27T19:30:00.000Z",
+        "currentDate": "2021-01-21T20:48:54.728Z",
+        "dateString": "27/01 20:30"
+    }
+]

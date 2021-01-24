@@ -1,5 +1,6 @@
 *.png
 cli_stats/raw_data/
+cli_stats/clean_data/
 __pycache__/
 *.pyc
 *.pyo

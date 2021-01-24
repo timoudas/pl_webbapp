@@ -5,6 +5,7 @@ const { FixtureStatsModel } = require("../models/FixtureStats");
 const utils = require('../services/utils.js')
 
 module.exports = {
+    getPlayersInfo,
     getKeyPassPlayers,
     getBestShotPlayers,
     getPlayers,
@@ -13,8 +14,129 @@ module.exports = {
     getBestAtt,
 }
 
+/**
+ * 
+ * @param {Integer} playerId | Get basic info for player
+ */
 
-
+async function getPlayersInfo(playerId){
+    var season = await utils.latestSeasonId()
+    
+    var data = await PlayerFixtureStatsModel.aggregate()
+    .match({
+        'seasonId': season,
+        'id': parseInt(playerId)
+    })
+    .lookup({
+        'from': 'fixture_stats',
+        'let': {'id': '$f_id'},
+        'pipeline': [
+            { '$match': {"$expr": { '$eq': [ "$f_id", "$$id" ] } } },
+         ],
+        'as': 'fixtures'
+    })
+    .unwind(
+        'fixtures'
+    )
+    .project({
+        'gameWeek': '$fixtures.gameweek',
+        'id' : 1,
+        'f_id': 1,
+        'seasonId': 1,
+        'total_pass': 1,
+        'mins_played': 1,
+        'name': 1,
+        'goals': 1,
+        'shot_off_target': 1,
+        'hit_woodwork': 1,
+        'total_scoring_att': 1,
+        '_id': 0,
+    })
+    .group({
+        '_id': {
+            'gameWeek': '$gameWeek', 
+            'fId': '$f_id'
+        },
+        'minsPlayed': {'$sum': '$mins_played'},
+        'totalPass': {'$sum': '$total_pass'},
+        'totalMinsPlayed': {'$sum': '$mins_played'},
+        'name': {'$first': '$name'},
+        'id': {'$first': '$id'},
+        'seasonId': {'$first': '$seasonId'},
+        'goals': {'$sum': '$goals'},
+        'shotOffTarget': {'$sum': '$shot_off_target'},
+        'hitWoodWord': {'$sum': '$hit_woodwork'},
+        'totalShots': {'$sum': '$total_scoring_att' },
+        'totalPlaytime': {'$sum': '$mins_played'},
+    })
+    .sort({
+        '_id': 1
+    })
+    .lookup({
+        'from': 'team_squads',
+        'let': {'id': '$id', 'seasonId': '$seasonId'},
+        'pipeline': [
+            { '$match': {"$expr": { '$eq': [ "$seasonId", "$$seasonId" ] } } },
+            { "$unwind": "$players" },
+            { "$match": { "$expr": { "$eq": ["$players.p_id", "$$id"] } } },
+         ],
+        'as': 'player_stats'
+    })
+    .unwind(
+        'player_stats'
+    )
+    .project({
+        'pass': '$totalPass',
+        'minsPlayed': '$totalMinsPlayed',
+        'shots': '$totalShots',
+        'shotOffTarget': 1,
+        'shotsOnTarget': {'$subtract': ['$totalShots','$shotOffTarget' ] },
+        'hitWoodWord': 1,
+        'Name': '$name',
+        'id': 1,
+        'seasonId': 1,
+        'goals': 1,
+        'teamId': '$player_stats.teamId',
+        'Club': '$player_stats.teamShortName',
+        'Appearances': '$player_stats.players.appearances',
+        'position': '$player_stats.players.position',
+        'PositionInfo': '$player_stats.players.positionInfo',
+        'Country': '$player_stats.players.country',
+        'fId': '$_id.fId',
+        'gameWeek': '$_id.gameWeek',
+        '_id': 0
+    })
+    var index = 0
+    var cumPass = 0
+    var cumMinsPlayed = 0
+    var cumShots = 0
+    var cumShotOffTarget = 0
+    var cumShotsOnTarget = 0
+    var cumHitWoodWord = 0
+    data.map(doc => {
+        index += 1
+        cumPass += doc.pass
+        cumMinsPlayed += doc.minsPlayed
+        cumShots += doc.shots
+        cumShotOffTarget += doc.shotOffTarget
+        cumShotsOnTarget += doc.shotsOnTarget
+        cumHitWoodWord += doc.hitWoodWord
+        return Object.assign(doc, { 
+            totalPass: cumPass,
+            totalMinsPlayed: cumMinsPlayed,
+            totalShots: cumShots,
+            totalShotOffTarget: cumShotOffTarget,
+            totalShotsOnTarget: cumShotsOnTarget,
+            totalHitWoodWord: cumHitWoodWord,
+            avgPass: +(cumPass / index).toFixed(1),
+            avMinsPlayed: +(cumMinsPlayed / index).toFixed(1),
+            avgShots: +(cumShots / index).toFixed(1),
+            avgShotsOffTarget: +(cumShotOffTarget / index).toFixed(1),
+            avgShotsOnTarget: +(cumShotsOnTarget / index).toFixed(1),
+        });
+    })
+    return data
+}
 
 /**
  * 
@@ -120,12 +242,9 @@ async function getKeyPassPlayers(){
         'averagePlaytime': -1,
         'teamId': 1
     })
-
-    console.log(data)
     return data
 }
 
-getKeyPassPlayers()
 
 async function getAvgPlayerSeasonPasses(playerId){
     var season = await utils.latestSeasonId()
@@ -164,9 +283,9 @@ async function getBestShotPlayers(){
         'goals': {'$sum': '$goals'},
         'shotOffTarget': {'$sum': '$shot_off_target'},
         'hitWoodWord': {'$sum': '$hit_woodwork'},
-        'name': {'$first': '$name'},
         'totalShots': {'$sum': '$total_scoring_att' },
         'totalPlaytime': {'$sum': '$mins_played'},
+        'name': {'$first': '$name'},
     })
     .sort({
         'totalShots': -1
@@ -213,6 +332,17 @@ async function getBestShotPlayers(){
 }
 
 async function getBestDef(){
+
+    /**
+     * let dataIsPresence = file(../data/playerFile.json)
+     * 
+     * if (dataIsPresence) {
+     *    return dataIsPresence
+     * } else {
+     *  ...
+     * }
+     */
+
     var season = await utils.latestSeasonId()
     var data = await PlayerStatsModel.aggregate()
     .match({
@@ -246,6 +376,11 @@ async function getBestDef(){
         'id': 1,
     })
     .limit(15)
+
+    /**
+     * if !dataIsPresence => data.writeToFile(../data/playerFile.json)
+     */
+
     return(data)
 }
 

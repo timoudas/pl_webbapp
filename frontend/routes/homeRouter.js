@@ -8,6 +8,8 @@ const homeController = require('../controllers/homeController')
 // GET /
 router.get('/', homeController.index)
 router.post('/', homeController.filterHandler)
+router.post('/:playerId', homeController.playerHandler)
+
 
 
 // Exports.

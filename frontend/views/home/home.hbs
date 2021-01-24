@@ -45,7 +45,7 @@
             <tbody id="playerStatsAvg">
                 {{#each shots}}
                     <tr>
-                        <td>{{this.name}}</td>
+                        <td id="player-clickable-row" value={{this.id}}>{{this.name}}</td>
                         <td>{{this.teamName}}</td>
                         <td>{{this.position}}</td>
                         <td>{{this.averageShotsPerGame}}</td>
@@ -54,5 +54,19 @@
                 {{/each}}
             </tbody>
         </table>
+    </div>
+    <div class="stats-player">
+        <div class="player-name"></div>
+        <div class="player-img">
+            <img id="player-portrait" src="assets/1870.png" onerror="this.onerror=null;this.src='assets/Photo-Missing.png'";/>
+        </div>
+        <div class="player-info"></div>
+        <div class="player-avg-shot">
+            <canvas id="player-avg-shot"></canvas>
+        </div>
+        <div class="player-avg-pass">
+            <canvas id="player-avg-pass"></canvas>
+        </div>
+
     </div>
 </div>
