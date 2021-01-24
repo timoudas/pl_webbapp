@@ -331,6 +331,70 @@ async function getBestShotPlayers(){
     return data
 }
 
+async function getBestTacklePlayers(){
+    var season = await utils.latestSeasonId()
+    var data = await PlayerFixtureStatsModel.aggregate()
+    .match({
+        'seasonId': season
+    })
+    .group({
+        '_id': {
+            'id': '$id', 
+            'season': '$seasonId', 
+        },
+        'totalTackle': {'$sum': '$total_tackle'},
+        'totalWonTackle': {'$sum': '$won_tackle'},
+        'totalfouls': {'$sum': '$fouls'},
+        'totalAttemptedTackleFoul': {'$sum': '$attempted_tackle_foul' },
+        'totalPlaytime': {'$sum': '$mins_played'},
+        'name': {'$first': '$name'},
+    })
+    .sort({
+        'totalTackle': -1
+    })
+    .limit(50)
+    .lookup({
+        'from': 'team_squads',
+        'let': {'id': '$_id.id', 'seasonId': '$_id.season'},
+        'pipeline': [
+            { '$match': {"$expr": { '$eq': [ "$seasonId", "$$seasonId" ] } } },
+            { "$unwind": "$players" },
+            { "$match": { "$expr": { "$eq": ["$players.p_id", "$$id"] } } },
+         ],
+        'as': 'player_stats'
+    })
+    .unwind(
+        'player_stats'
+    )
+    .project({
+        'totalPlaytime': 1,
+        'totalTackle': 1,
+        'totalWonTackle': 1,
+        'totalfouls': 1,
+        'totalAttemptedTackleFoul': 1,
+        'name': 1,
+        'seasonId': 1,
+        'teamId': '$player_stats.teamId',
+        'teamName': '$player_stats.teamShortName',
+        'appearances': '$player_stats.players.appearances',
+        'position': '$player_stats.players.position',
+        'id': '$_id.id',
+        'seasonId': '$_id.season',
+        'avgTackle': {'$round': [ {'$divide':['$totalTackle', '$player_stats.players.appearances'] }, 1] },
+        'avgWonTackle': {'$round': [ {'$divide': [ '$totalWonTackle','$player_stats.players.appearances'] }, 1] },
+        'avgFoul': {'$round': [ {'$divide': [ '$totalfouls','$player_stats.players.appearances'] }, 1] },
+        '_id': 0
+    })
+    .sort({
+        'avgTackle': -1,
+        'avgWonTackle': -1,
+        'teamId': 1
+    })
+    console.log(data)
+    return data
+}
+getBestTacklePlayers()
+
 async function getBestDef(){
 
     /**
