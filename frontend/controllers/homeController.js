@@ -33,7 +33,9 @@ homeController.filterHandler = async function (req,res){
         res.json(shots)
         res.end()
     } else {
-        console.log('hello')
+        var shots = await TeamPlayersServices.getBestTacklePlayers()
+        res.json(shots)
+        res.end()
     }
 }
 

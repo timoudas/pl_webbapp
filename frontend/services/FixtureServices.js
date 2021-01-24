@@ -23,8 +23,5 @@ async function getFixtureResult(fId) {
         'home_team_shortName': 1,
         'away_team_shortName': 1,
     })
-    console.log(data)
     return(data)
 }
-
-getFixtureResult(46605)

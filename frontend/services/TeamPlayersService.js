@@ -8,12 +8,13 @@ module.exports = {
     getPlayersInfo,
     getKeyPassPlayers,
     getBestShotPlayers,
+    getBestTacklePlayers,
     getPlayers,
     getBestDef,
     getBestMid,
     getBestAtt,
 }
-
+getBestTacklePlayers()
 /**
  * 
  * @param {Integer} playerId | Get basic info for player
@@ -331,6 +332,7 @@ async function getBestShotPlayers(){
     return data
 }
 
+
 async function getBestTacklePlayers(){
     var season = await utils.latestSeasonId()
     var data = await PlayerFixtureStatsModel.aggregate()
@@ -390,10 +392,8 @@ async function getBestTacklePlayers(){
         'avgWonTackle': -1,
         'teamId': 1
     })
-    console.log(data)
     return data
 }
-getBestTacklePlayers()
 
 async function getBestDef(){
 

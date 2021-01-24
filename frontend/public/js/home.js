@@ -25,7 +25,6 @@ $(document).ready(function(){
     $(document).on("click", "#player-clickable-row", function() {
         const playerId = $(this).attr('value')
         $("#player-portrait").attr("src",`assets/${playerId}.png`);
-        console.log(playerId)
         $.ajax({
             type: 'POST',
             url: `/${playerId}?` + $.param({ playerId: playerId}),
@@ -192,10 +191,11 @@ function homeTableToggle(event){
             type: 'POST',
             url: '/?' + $.param({ statsType: queryVal}),
             success: (newVals) => {   
+                $('#stats-fouls').css({'display':'none'})
                 $('#stats-placehld').text("AvgPlayTime")
                 $('#stats-placehld1').text("AvgPasses")
                 $('#playerStatsAvg').empty();
-                for(let i = 0; i < 50; i++) {
+                for(let i = 0; i < newVals.length; i++) {
                     let filteredTr = newVals[i]
                     let newHtml = `<tr>
                     <td id="player-clickable-row" value=${filteredTr.id}>${filteredTr.name}</td>
@@ -214,17 +214,42 @@ function homeTableToggle(event){
             type: 'POST',
             url: '/?' + $.param({ statsType: queryVal}),
             success: (newVals) => {     
+                $('#stats-fouls').css({'display':'none'})
                 $('#stats-placehld').text("AvgShots")
                 $('#stats-placehld1').text("AvgOnTarget")  
                 $('#playerStatsAvg').empty();
-                for(let i = 0; i < 50; i++) {
+                for(let i = 0; i < newVals.length; i++) {
+                    let filteredTr = newVals[i]
+                    let newHtml = `<tr>
+                    <td id="player-clickable-row" value="${filteredTr.id}">${filteredTr.name}</td>
+                    <td>${filteredTr.teamName}</td>
+                    <td>${filteredTr.position}</td>
+                    <td>${filteredTr.averageShotsPerGame}</td>
+                    <td>${filteredTr.averageShotsOnTarget}</td>
+                    </tr>`
+    
+                    $('#playerStatsAvg').append(newHtml)
+                }
+            }
+        })
+    } else if (queryVal == 3){
+        $.ajax({
+            type: 'POST',
+            url: '/?' + $.param({ statsType: queryVal}),
+            success: (newVals) => {     
+                $('#stats-fouls').css({'display':'block'})
+                $('#stats-placehld').text("AvgTackle")
+                $('#stats-placehld1').text("AvgWonTackle")  
+                $('#playerStatsAvg').empty();
+                for(let i = 0; i < newVals.length; i++) {
                     let filteredTr = newVals[i]
                     let newHtml = `<tr>
                     <td id="player-clickable-row" value=${filteredTr.id}>${filteredTr.name}</td>
                     <td>${filteredTr.teamName}</td>
                     <td>${filteredTr.position}</td>
-                    <td>${filteredTr.averageShotsPerGame}</td>
-                    <td>${filteredTr.averageShotsOnTarget}</td>
+                    <td>${filteredTr.avgFoul}</td>
+                    <td>${filteredTr.avgTackle}</td>
+                    <td>${filteredTr.avgWonTackle}</td>
                     </tr>`
     
                     $('#playerStatsAvg').append(newHtml)
