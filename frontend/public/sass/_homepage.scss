@@ -83,7 +83,7 @@
     img {
         height: 140px;
         margin: 27px;
-        border-radius: 50%;
+        border-radius: 70%;
     }
 }
 
@@ -133,15 +133,13 @@
     grid-area: 1 / 1 / 2 / 3;
 }
 
-prob-input {
-    margin-bottom: 10px;
-}
-
 .prob-field {
     outline: none;
     width: 50%;
     background-color: inherit;
     border: none;
+    height: 50px;
+    font-size: 24px;
 }
 
 .prob-field{

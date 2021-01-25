@@ -294,6 +294,8 @@ async function getBestShotPlayers(){
         'totalShots': {'$sum': '$total_scoring_att' },
         'totalPlaytime': {'$sum': '$mins_played'},
         'name': {'$first': '$name'},
+        'stdDevShots': { '$stdDevSamp': { '$divide': [ '$total_scoring_att', '$mins_played'] } },
+        'stdDevShotsOnTarget': { '$stdDevSamp': {'$divide': [ {'$subtract': ['$total_scoring_att','$shot_off_target' ] }, '$mins_played'] } },
     })
     .sort({
         'totalShots': -1
@@ -313,6 +315,8 @@ async function getBestShotPlayers(){
         'player_stats'
     )
     .project({
+        'stdDevShotsOnTarget': {'$round': [ { '$multiply': ['$stdDevShotsOnTarget', 90] }, 1] },
+        'stdDevShots': {'$round':[ { '$multiply': ['$stdDevShots', 90] }, 1 ] },
         'totalPlaytime': 1,
         'totalShots': 1,
         'goals': 1,
@@ -357,6 +361,7 @@ async function getBestTacklePlayers(){
         'totalAttemptedTackleFoul': {'$sum': '$attempted_tackle_foul' },
         'totalPlaytime': {'$sum': '$mins_played'},
         'name': {'$first': '$name'},
+        'stdDevTackles': { '$stdDevSamp': { '$divide': [ '$total_tackle', '$mins_played'] } },
     })
     .sort({
         'totalTackle': -1
@@ -376,6 +381,7 @@ async function getBestTacklePlayers(){
         'player_stats'
     )
     .project({
+        'stdDevShots': {'$round':[ { '$multiply': ['$stdDevTackles', 90] }, 1 ] },
         'totalPlaytime': 1,
         'totalTackle': 1,
         'totalWonTackle': 1,
