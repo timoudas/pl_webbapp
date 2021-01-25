@@ -143,7 +143,6 @@ async function getPlayersInfo(playerId){
             avgShotsOnTarget: +(cumShotsOnTarget / index).toFixed(1),
         });
     })
-    console.log(data)
     return data
 }
 

@@ -119,3 +119,33 @@
     display: grid;
     grid-area: 3 / 2 / 5 / 3;
 }
+
+.probability-calc {
+    display: grid;
+    grid-area: 3 / 3 /-1 / 4;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto auto auto auto;
+}
+
+.prob-header {
+    color: $header-color;
+    font-size: 16px;
+    grid-area: 1 / 1 / 2 / 3;
+}
+
+prob-input {
+    margin-bottom: 10px;
+}
+
+.prob-field {
+    outline: none;
+    width: 50%;
+    background-color: inherit;
+    border: none;
+}
+
+.prob-field{
+    &:focus {
+        border: 1px solid #02CEEC;
+    }
+}
