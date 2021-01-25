@@ -2,7 +2,7 @@
 // var sma = require('sma');
 
 /**
- * JS to fill .stats-player
+ * Simple Moving Average function
  */
 var SMA = function(valueArr, points){
     var targetArr = []
@@ -21,6 +21,10 @@ var SMA = function(valueArr, points){
 // Chart variables
 var shotChart
 var passChart
+var tackleChart
+/**
+ * Function to trigger charts for a player
+ */
 $(document).ready(function(){
     $(document).on("click", "#player-clickable-row", function() {
         const playerId = $(this).attr('value')
@@ -57,26 +61,37 @@ $(document).ready(function(){
                 var shotsArr = []
                 var shotsOnArr = []
 
+                var tackleArr = []
+                var avgTackleArr = []
+
+
                 var avgMinsPlayed = []
                 var totMinsPlayed = []
 
                 for (var i = 0; i < data.length; ++i){
                     avgPassArr.push(data[i].avgPass)
+                    totPassArr.push(data[i].totalPass)
+                    passArr.push(data[i].pass)
+
                     avgShotsArr.push(data[i].avgShots)
                     avgShotsOnArr.push(data[i].averageShotsOnTarget)
                     totShotsArr.push(data[i].totalShots)
-                    totPassArr.push(data[i].totalPass)
-                    avgMinsPlayed.push(data[i].avgMinsPlayed)
-                    totMinsPlayed.push(data[i].totalMinsPlayed)
-                    passArr.push(data[i].pass)
                     shotsArr.push(data[i].shots)
                     shotsOnArr.push(data[i].shotsOnTarget)
+                    
+                    avgMinsPlayed.push(data[i].avgMinsPlayed)
+                    totMinsPlayed.push(data[i].totalMinsPlayed)
+                    
+                    tackleArr.push(data[i].tackle)
+                    avgTackleArr.push(data[i].avgTackles)
+
                     labels.push(data[i].gameWeek)
                 }
 
                 var SMA3Pass = SMA(passArr, 3)
                 var SMA3Shots = SMA(shotsArr, 3)
                 var SMA3ShotsOn = SMA(shotsOnArr, 3)
+                var SMA3Tackles = SMA(tackleArr, 3)
 
                 if (passChart) {
                     passChart.data.labels = labels
@@ -109,6 +124,42 @@ $(document).ready(function(){
                                     fill: false,
             
                                     data: SMA3Pass,
+                                },
+                            ]
+                        }
+                    })
+                }
+                if (tackleChart) {
+                    tackleChart.data.labels = labels
+                    tackleChart.data.datasets[0].data = avgTackleArr
+                    tackleChart.data.datasets[1].data = SMA3Tackles
+                    passChart.update()
+                } else {
+                    var ctx = document.getElementById('player-avg-tackle').getContext('2d');
+                    passChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: "avgTackle",
+                                    fillColor: "rgba(172, 26, 26, 0.9)",
+                                    strokeColor: "rgba(172, 26, 26, 0.9)",
+                                    pointColor: "rgba(172, 26, 26, 0.9)",
+                                    borderColor: "rgba(14, 86, 168, 0.9)",   
+                                    fill: false,
+            
+                                    data: avgTackleArr,
+                                },
+                                {
+                                    label: "MA3Tackles",
+                                    fillColor: "rgba(0,0,0,0)",
+                                    strokeColor: "rgba(220,220,220,1)",
+                                    pointColor: "rgba(200,122,20,1)",
+                                    borderColor: "rgba(43, 87, 29, 0.9)",
+                                    fill: false,
+            
+                                    data: SMA3Tackles,
                                 },
                             ]
                         }

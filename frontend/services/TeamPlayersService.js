@@ -51,6 +51,7 @@ async function getPlayersInfo(playerId){
         'shot_off_target': 1,
         'hit_woodwork': 1,
         'total_scoring_att': 1,
+        'total_tackle': 1,
         '_id': 0,
     })
     .group({
@@ -69,6 +70,7 @@ async function getPlayersInfo(playerId){
         'hitWoodWord': {'$sum': '$hit_woodwork'},
         'totalShots': {'$sum': '$total_scoring_att' },
         'totalPlaytime': {'$sum': '$mins_played'},
+        'totalTackle': {'$sum': '$total_tackle'},
     })
     .sort({
         '_id': 1
@@ -92,6 +94,7 @@ async function getPlayersInfo(playerId){
         'shots': '$totalShots',
         'shotOffTarget': 1,
         'shotsOnTarget': {'$subtract': ['$totalShots','$shotOffTarget' ] },
+        'tackle': '$totalTackle',
         'hitWoodWord': 1,
         'Name': '$name',
         'id': 1,
@@ -114,6 +117,7 @@ async function getPlayersInfo(playerId){
     var cumShotOffTarget = 0
     var cumShotsOnTarget = 0
     var cumHitWoodWord = 0
+    var cumTackles = 0
     data.map(doc => {
         index += 1
         cumPass += doc.pass
@@ -122,6 +126,7 @@ async function getPlayersInfo(playerId){
         cumShotOffTarget += doc.shotOffTarget
         cumShotsOnTarget += doc.shotsOnTarget
         cumHitWoodWord += doc.hitWoodWord
+        cumTackles += doc.tackle
         return Object.assign(doc, { 
             totalPass: cumPass,
             totalMinsPlayed: cumMinsPlayed,
@@ -129,6 +134,8 @@ async function getPlayersInfo(playerId){
             totalShotOffTarget: cumShotOffTarget,
             totalShotsOnTarget: cumShotsOnTarget,
             totalHitWoodWord: cumHitWoodWord,
+            totalTackles: cumTackles,
+            avgTackles: +(cumTackles / index).toFixed(1),
             avgPass: +(cumPass / index).toFixed(1),
             avMinsPlayed: +(cumMinsPlayed / index).toFixed(1),
             avgShots: +(cumShots / index).toFixed(1),
@@ -136,6 +143,7 @@ async function getPlayersInfo(playerId){
             avgShotsOnTarget: +(cumShotsOnTarget / index).toFixed(1),
         });
     })
+    console.log(data)
     return data
 }
 
