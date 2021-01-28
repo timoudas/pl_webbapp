@@ -253,7 +253,7 @@ function homeTableToggle(event){
                     <td>${filteredTr.teamName}</td>
                     <td>${filteredTr.position}</td>
                     <td>${filteredTr.averagePlaytime}</td>
-                    <td>${filteredTr.averagePasses}</td>
+                    <td data-std="${filteredTr.stdDevPasses}">${filteredTr.averagePasses}</td>
                     </tr>`
     
                     $('#playerStatsAvg').append(newHtml)
@@ -275,8 +275,8 @@ function homeTableToggle(event){
                     <td id="player-clickable-row" value="${filteredTr.id}">${filteredTr.name}</td>
                     <td>${filteredTr.teamName}</td>
                     <td>${filteredTr.position}</td>
-                    <td>${filteredTr.averageShotsPerGame}</td>
-                    <td>${filteredTr.averageShotsOnTarget}</td>
+                    <td data-std="${stdDevShots}">${filteredTr.averageShotsPerGame}</td>
+                    <td data-std="${stdDevShotsOnTarget}">${filteredTr.averageShotsOnTarget}</td>
                     </tr>`
     
                     $('#playerStatsAvg').append(newHtml)
@@ -299,7 +299,7 @@ function homeTableToggle(event){
                     <td>${filteredTr.teamName}</td>
                     <td>${filteredTr.position}</td>
                     <td>${filteredTr.avgFoul}</td>
-                    <td>${filteredTr.avgTackle}</td>
+                    <td data-std="${stdDevTackle}">${filteredTr.avgTackle}</td>
                     <td>${filteredTr.avgWonTackle}</td>
                     </tr>`
     

@@ -49,8 +49,8 @@
                         <td id="player-clickable-row" value={{this.id}}>{{this.name}}</td>
                         <td>{{this.teamName}}</td>
                         <td>{{this.position}}</td>
-                        <td>{{this.averageShotsPerGame}}</td>
-                        <td>{{this.averageShotsOnTarget}}</td>
+                        <td data-std="{{this.stdDevShots}}">{{this.averageShotsPerGame}}</td>
+                        <td data-std="{{this.stdDevShotsOnTarget}}">{{this.averageShotsOnTarget}}</td>
                     </tr>
                 {{/each}}
             </tbody>
@@ -72,8 +72,8 @@
             <canvas id="player-avg-tackle"></canvas>
         </div>
         <div class="probability-calc">
-            <div class="prob-header">Calc Implied Odds (over)</div>
-            <div class="prob-input__shots">
+            <div class="prob-header">Calc Implied Odds &#8805</div>
+            <div class="prob-input">
                 <input type="text" placeholder="Shots" class="prob-field" id="prob-shot">
             </div>
             <div class="prob-result__shots">
@@ -83,7 +83,7 @@
                 <input type="text" placeholder="Shots On Target" class="prob-field" id="prob-shot-on">
             </div>
             <div class="prob-result__shots">
-                
+
             </div>
             <div class="prob-input__passes">
                 <input type="text" placeholder="Passes" class="prob-field" id="prob-pass">
