@@ -381,7 +381,7 @@ async function getBestTacklePlayers(){
         'player_stats'
     )
     .project({
-        'stdDevShots': {'$round':[ { '$multiply': ['$stdDevTackles', 90] }, 1 ] },
+        'stdDevTackle': {'$round':[ { '$multiply': ['$stdDevTackles', 90] }, 1 ] },
         'totalPlaytime': 1,
         'totalTackle': 1,
         'totalWonTackle': 1,
