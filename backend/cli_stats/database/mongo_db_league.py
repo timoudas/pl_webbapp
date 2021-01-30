@@ -146,10 +146,10 @@ def executePushSchedule(db):
     collection_name = DB_collections('sc')
     collection = db.DATABASE[collection_name]
     collection.remove({})
-    print(f'Pushing updates to:  {collection_name}')
+    print(f'Pushing updates to: {collection_name}')
     collection.bulk_write([
         ReplaceOne(
-            { "id": d['id'] }, d,
+            { "_id": d['id'] }, d,
             upsert=True
         )
         for d in data

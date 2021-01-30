@@ -5,9 +5,24 @@ from pprint import pprint
 
 session = requests.Session()
 
+def get_current_season():
+    url = 'https://footballapi.pulselive.com/football/competitions/1/compseasons/current'
+    headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Origin': 'https://www.premierleague.com',
+                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'
+            }
+    try:
+        response = session.get(url, headers=headers).json()
+        data = response["id"]
+        return data
+    except Exception as e:
+        print(e, 'Something went wrong with the request')
+        return {}
+
 def load_schedule(url):
     """Retreives unplayed matches from the API"""
     page = 0
+    season = get_current_season()
     data_temp = []
     while True:
         headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -16,7 +31,7 @@ def load_schedule(url):
                   }
         params = (('pageSize', '100'),
                  ('page', str(page),),
-                 ('statuses', 'U'),
+                 ('compSeasons', str(season)),
                  ('comps', 1),)
 
     # request to obtain the team info

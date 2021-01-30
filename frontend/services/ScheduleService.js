@@ -55,6 +55,7 @@ async function getGameWeekSchedule(){
         'date': 1,
         'teams': 1,
         'currentDate': 1,
+        'id': 1,
         '_id': 0,
     })
     .sort({'date': 1})
