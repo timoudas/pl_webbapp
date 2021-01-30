@@ -16,7 +16,8 @@ module.exports = {
     latestSeasonLabel,
     getSeasons,
     updateData,
-    writeData
+    writeData,
+    currentGameWeek,
 }
 
 /**
@@ -50,6 +51,23 @@ async function writeData(fileName, data){
     data = await JSON.stringify(data, null, 4);
     await fs.promises.writeFile(fileName, data);
     console.log(`${fileName} saved`)
+}
+
+async function currentGameWeek(){
+    const season = await latestSeasonId()
+    try {
+        const resp = await axios({
+            method: 'get',
+            url: `https://footballapi.pulselive.com/football/compseasons/${season}/gameweeks/current`,
+            params: {'pageSize': '100'},
+            headers: config
+          })
+          var current = resp.data.gameweeks[0].gameweek
+          console.log(current)
+          return current
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 

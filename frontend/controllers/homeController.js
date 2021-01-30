@@ -15,7 +15,7 @@ const FixtureServices = require('../services/FixtureServices')
  */
 homeController.index = async function (req, res) {
     // res.locals.odds = await OddsServices.getOdds()
-    res.locals.schedule = await ScheduleServices.getSchedule()
+    res.locals.schedule = await ScheduleServices.getGameWeekSchedule()
     res.locals.passes = await TeamPlayersServices.getKeyPassPlayers()
     res.locals.shots = await TeamPlayersServices.getBestShotPlayers()
 

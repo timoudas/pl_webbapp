@@ -405,6 +405,7 @@ async function getBestTacklePlayers(){
         'avgWonTackle': -1,
         'teamId': 1
     })
+    console.log(data)
     return data
 }
 
