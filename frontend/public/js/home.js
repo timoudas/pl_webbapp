@@ -49,6 +49,8 @@ $(document).ready(function(){
                 <div class="p-info-field">${playerInfo.Country}</div>`
                 $('.player-info').append(playerInfoHTML)
 
+                
+
                 var labels = []
 
                 var avgPassArr = []
