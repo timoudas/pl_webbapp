@@ -6,6 +6,9 @@ import requests
 import re
 from tqdm import tqdm
 
+# FIX DB STRUCTURE 
+# ADD StRUCTURE TO ENABLE EASY QUERYING
+
 class FixtureStats(Base):
 
     def __init__(self, *args, **kwargs):
