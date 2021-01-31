@@ -133,10 +133,10 @@ $(document).ready(function(){
                     tackleChart.data.labels = labels
                     tackleChart.data.datasets[0].data = avgTackleArr
                     tackleChart.data.datasets[1].data = SMA3Tackles
-                    passChart.update()
+                    tackleChart.update()
                 } else {
                     var ctx = document.getElementById('player-avg-tackle').getContext('2d');
-                    passChart = new Chart(ctx, {
+                    tackleChart = new Chart(ctx, {
                         type: 'line',
                         data: {
                             labels: labels,

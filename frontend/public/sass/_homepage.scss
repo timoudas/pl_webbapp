@@ -53,11 +53,18 @@
     overflow-y: scroll;
     max-height: 500px;
     box-shadow: $box-shadow;
-  }
+}
   
-  #player-clickable-row{
+#player-clickable-row{
     cursor: pointer;
-  }
+}
+
+.cond-prob {
+    box-shadow: $box-shadow;
+    margin-left: 27px;
+    margin-bottom: 27px;
+}
+
 
 .stats-player {
     grid-area: 2 / 2 / -1 / -1;
