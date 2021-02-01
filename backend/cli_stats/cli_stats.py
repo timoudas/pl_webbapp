@@ -78,6 +78,7 @@ class StatShell(cmd.Cmd):
         '-p': clean.playerstats,
         '-t': clean.team_standings,
         '-f': clean.fixturestats,
+        '-i': clean.fixturestats,
         '-l': clean.league_standings,
         '-e': clean.fixture_player_stats,
         '-s': clean.team_squads,
@@ -86,7 +87,8 @@ class StatShell(cmd.Cmd):
     FILE_NAMES = {
         '-p':'playerstats',
         '-t': 'team_standings',
-        '-f': 'fixturestats',
+        '-f': 'fixture_stats',
+        '-i': 'fixture_info',
         '-l': 'league_standings',
         '-e': 'player_fixture',
         '-s': 'team_squads',
@@ -183,6 +185,7 @@ class StatShell(cmd.Cmd):
         choices = {'-p': clean.playerstats,
                    '-t': clean.team_standings,
                    '-f': clean.fixturestats,
+                   '-i': clean.fixtureinfo,
                    '-l': clean.league_standings,
                    '-e': clean.fixture_player_stats,
                    '-s': clean.team_squads,}
@@ -196,7 +199,8 @@ class StatShell(cmd.Cmd):
         Options:
             -p,  --player         Playerstats
             -t,  --team           Team standings
-            -f,  --fixture        Fixturestats
+            -f,  --fixture        FixtureStats
+            -i,  --info           FixtureInfo
             -l,  --league         League Standings
             -e   --player_fixture Player Fixture Stats
             -s   --team_squads    Team Squads
@@ -219,7 +223,8 @@ class StatShell(cmd.Cmd):
     def push_choices(self, type_stats, database):
         choices = {'-p': db.executePushPlayerLeague,
                    '-t': db.executePushTeamLeague,
-                   '-f': db.executePushFixtureLeague,
+                   '-f': db.executePushFixtureStatsLeague,
+                   '-i': db.executePushFixtureInfoLeague,
                    '-l': db.executePushLeagueStandingsLeague,
                    '-e': db.executePushFixturePlayerStatsLeague,
                    '-s': db.executePushTeamSquadsLeague,
@@ -235,6 +240,7 @@ class StatShell(cmd.Cmd):
             -p,  --player         Push Playerstats
             -t,  --team           Push Team standings
             -f,  --fixture        Push Fixturestats
+            -i,  --info           Push Fixturestats
             -l,  --league         Push League Standings
             -e,  --player_fixture Push Player Fixture Stats
             -s   --team_squads    Team Squads
