@@ -20,15 +20,17 @@ def read_fixtureinfo(data):
                 home_team = stats['teams'][0]
                 away_team = stats['teams'][1]
                 team = {
-                    'homeTeam' : stats['teams'][0]['team']['name'],
-                    'homeTeamId' : stats['teams'][0]['team']['club']['id'],
-                    'homeTeamShortName' : stats['teams'][0]['team']['shortName'],
-                    'homeTeamScore' : deep_get(home_team, 'score', default=0),
-
-                    'awayTeam' : stats['teams'][1]['team']['name'],
-                    'awayTeamId' : stats['teams'][1]['team']['club']['id'],
-                    'awayTeamShortName' : stats['teams'][1]['team']['shortName'],
-                    'awayTeamScore' : deep_get(away_team, 'score', default=0),
+                    'team' : stats['teams'][0]['team']['name'],
+                    'teamId' : stats['teams'][0]['team']['club']['id'],
+                    'teamShortName' : stats['teams'][0]['team']['shortName'],
+                    'teamScore' : deep_get(home_team, 'score', default=0),
+                }
+                teams.append(team)
+                team = {
+                    'team' : stats['teams'][1]['team']['name'],
+                    'teamId' : stats['teams'][1]['team']['club']['id'],
+                    'teamShortName' : stats['teams'][1]['team']['shortName'],
+                    'teamScore' : deep_get(away_team, 'score', default=0),
                 }
                 teams.append(team)
                 stats_temp = \
@@ -42,8 +44,8 @@ def read_fixtureinfo(data):
                     'competitionId' : deep_get(stats, 'gameweek.compSeason.competition.id'),
 
                     'gameweek' : deep_get(stats, 'gameweek.gameweek'),
-                    'kickoff' : deep_get(stats, 'kickoff.label'),
-                    'kickoffMillis' : deep_get(stats, 'kickoff.millis'),
+                    'kickoff' : deep_get(stats, 'provisionalKickoff.label'),
+                    'kickoffMillis' : deep_get(stats, 'provisionalKickoff.millis'),
                     'teams': teams,
 
                     'ground' : deep_get(stats, 'ground.name'),
@@ -63,9 +65,8 @@ def read_fixtureinfo(data):
     return info_all
 
 def read_fixturestats(data):
-    """In key "stats" followed by teamID followed by key "M"
-
-    """
+    """Returns a json object where each object represents a 
+    teams stats for a specific season"""
     try:
         stats_all = []
         for d in data:
@@ -83,26 +84,30 @@ def read_fixturestats(data):
             else:
                 stats = d['stats']
                 info = d['info']
-
                 home_id_key = str(info['teams'][0]['team']['club']['id'])
                 away_id_key = str(info['teams'][1]['team']['club']['id'])
-
+                data_home = {}
+                data_away = {}
 
                 if away_id_key in stats:
                     if home_id_key in stats:
-                        away = stats[away_id_key]['M']
+
                         home = stats[home_id_key]['M']
-                        stats_away = {'away_' + stats.get('name'): stats.get('value') for stats in away}
-                        stats_home = {'home_' + stats.get('name'): stats.get('value') for stats in home}
-                        stats_temp.update(stats_away)
-                        stats_temp.update(stats_home)
-                        stats_temp['seasonLabel'] = d['info']['gameweek']['compSeason']['label']
-                        stats_temp['seasonId'] = deep_get(info, 'gameweek.compSeason.id')
-                        stats_temp['fId'] = deep_get(info, 'id')
+                        data_home['seasonLabel'] = d['info']['gameweek']['compSeason']['label']
+                        data_home['seasonId'] = deep_get(info, 'gameweek.compSeason.id')
+                        data_home['fId'] = deep_get(info, 'id')
+                        data_home['teamId'] = home_id_key
+                        data_home.update({stats.get('name'): stats.get('value') for stats in home})
+                        
+                        away = stats[away_id_key]['M']
+                        data_away['seasonLabel'] = d['info']['gameweek']['compSeason']['label']
+                        data_away['seasonId'] = deep_get(info, 'gameweek.compSeason.id')
+                        data_away['fId'] = deep_get(info, 'id')
+                        data_away['teamId'] = away_id_key
+                        data_away.update({stats.get('name'): stats.get('value') for stats in away})
 
-    
-
-                stats_all.append(stats_temp)
+                stats_all.append(data_home)
+                stats_all.append(data_away)
         return stats_all
     except TypeError as e:
         print(e, "Check that data exists and is loaded correctly")
