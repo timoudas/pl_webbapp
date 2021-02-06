@@ -60,7 +60,7 @@ def read_fixtureinfo(data):
                     'clockLabel' : deep_get(stats, 'clock.label'),
                     'clockSecs' : deep_get(stats, 'clock.secs'),}
                 info_all.append(stats_temp)
-    except TypeError as e:
+    except TypeError:
         print("Check that data exists and is loaded correctly")
     return info_all
 
@@ -71,8 +71,6 @@ def read_fixturestats(data):
         stats_all = []
         for d in data:
             stats_temp = {}
-            stats_home = {}
-            stats_away = {}
             if not 'stats' in d:
                 try:
                     stats_temp['fId'] = deep_get(d, 'info.id')
@@ -112,6 +110,63 @@ def read_fixturestats(data):
     except TypeError as e:
         print(e, "Check that data exists and is loaded correctly")
 
+def get_match_officials(officials):
+    match_officals_temp = \
+    {'role': deep_get(officials, 'role'),
+        'matchOfficialId': officials['matchOfficialId'],
+        'first': deep_get(officials, 'name.first'),
+        'last': deep_get(officials, 'name.last'),
+        'name': deep_get(officials, 'name.display'),
+        'm_id': officials['id']
+    }
+    return match_officals_temp
+
+def get_events(event):
+    events_temp = \
+    {'clockSecs': deep_get(event, 'clock.secs'),
+        'clockLabel': deep_get(event, 'clock.label'),
+        'phase': deep_get(event, 'phase'),
+        'type': deep_get(event, 'type'),
+        'timeMillis': deep_get(event, 'time.millis'),
+        'timeLabel': deep_get(event, 'time.label'),
+        'homeScore': deep_get(event, 'score.homeScore'),
+        'awayScore': deep_get(event, 'score.awayScore'),
+        'id': deep_get(event, 'id'),
+    }
+    return events_temp
+
+def get_substitutes(sub, team_id):
+    substitutes_temp = \
+    {'teamId': team_id,
+        'matchPosition': deep_get(sub, 'matchPosition'),
+        'captain': deep_get(sub, 'captain'),
+        'playerId': deep_get(sub, 'playerId'),
+        'position': deep_get(sub, 'info.position'),
+        'shirtNum': deep_get(sub, 'info.shirtNum'),
+        'positionInfo': deep_get(sub, 'info.positionInfo'),
+        'name': deep_get(sub, 'name.display'),
+        'first': deep_get(sub, 'name.first'),
+        'last': deep_get(sub, 'name.last'),
+        'id': sub['id']
+    }
+    return substitutes_temp
+
+def get_lineup(line, team_id):
+    lineup_temp = \
+        {'teamId': team_id,
+        'matchPosition': deep_get(line, 'matchPosition'),
+        'captain': deep_get(line, 'captain'),
+        'playerId': deep_get(line, 'playerId'),
+        'position': deep_get(line, 'info.position'),
+        'shirtNum': deep_get(line, 'info.shirtNum'),
+        'positionInfo': deep_get(line, 'info.positionInfo'),
+        'name': deep_get(line, 'name.display'),
+        'first': deep_get(line, 'name.first'),
+        'last': deep_get(line, 'name.last'),
+        'id': line['id'],
+    }
+    return lineup_temp
+
 def read_fixture_events(data):
     info_all = []
     for d in data:
@@ -130,16 +185,8 @@ def read_fixture_events(data):
               'formation':[],
         }
         for official in match_officals:
-            match_officals_temp = {}
-            match_officals_temp = \
-            {'role': deep_get(official, 'role'),
-             'matchOfficialId': official['matchOfficialId'],
-             'first': deep_get(official, 'name.first'),
-             'last': deep_get(official, 'name.last'),
-             'name': deep_get(official, 'name.display'),
-             'm_id': official['id']
-            }
-            stats_temp['matchOfficials'].append(match_officals_temp)
+            data = get_match_officials(official)
+            stats_temp['matchOfficials'].append(data)            
 
         for lineups in team_list:
             if lineups:
@@ -153,57 +200,18 @@ def read_fixture_events(data):
                 'players': deep_get(formation, 'players')
                 }
                 stats_temp['formation'].append(formation_temp)
-                for l in linup:
-                    lineup_temp = {}
-                    lineup_temp = \
-                    {'teamId': team_id,
-                     'matchPosition': deep_get(l, 'matchPosition'),
-                     'captain': deep_get(l, 'captain'),
-                     'playerId': deep_get(l, 'playerId'),
-                     'position': deep_get(l, 'info.position'),
-                     'shirtNum': deep_get(l, 'info.shirtNum'),
-                     'positionInfo': deep_get(l, 'info.positionInfo'),
-                     'name': deep_get(l, 'name.display'),
-                     'first': deep_get(l, 'name.first'),
-                     'last': deep_get(l, 'name.last'),
-                     'id': l['id'],
-                    }
-                    stats_temp['lineUps'].append(lineup_temp)
+                for line in linup:
+                    data = get_lineup(line, team_id)
+                    stats_temp['lineUps'].append(data)
 
-                for s in substitutes:
-                    substitutes_temp = {}
-                    substitutes_temp = \
-                    {'teamId': team_id,
-                     'matchPosition': deep_get(s, 'matchPosition'),
-                     'captain': deep_get(s, 'captain'),
-                     'playerId': deep_get(s, 'playerId'),
-                     'position': deep_get(s, 'info.position'),
-                     'shirtNum': deep_get(s, 'info.shirtNum'),
-                     'positionInfo': deep_get(s, 'info.positionInfo'),
-                     'name': deep_get(s, 'name.display'),
-                     'first': deep_get(s, 'name.first'),
-                     'last': deep_get(s, 'name.last'),
-                     'id': s['id']
-                    }
-                
-                    stats_temp['substitutes'].append(substitutes_temp)
+                for sub in substitutes:
+                    data = get_substitutes(sub, team_id)
+                    stats_temp['substitutes'].append(data)
 
         for event in events:
             if event:
-                events_temp = {}
-                events_temp = \
-                {'clockSecs': deep_get(event, 'clock.secs'),
-                 'clockLabel': deep_get(event, 'clock.label'),
-                 'phase': deep_get(event, 'phase'),
-                 'type': deep_get(event, 'type'),
-                 'timeMillis': deep_get(event, 'time.millis'),
-                 'timeLabel': deep_get(event, 'time.label'),
-                 'homeScore': deep_get(event, 'score.homeScore'),
-                 'awayScore': deep_get(event, 'score.awayScore'),
-                 'id': deep_get(event, 'id'),
-                }
-            stats_temp['events'].append(events_temp)
-
+                data = get_events(event)
+                stats_temp['events'].append(data)
 
         info_all.append(stats_temp)
     return info_all
