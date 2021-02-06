@@ -53,9 +53,11 @@ homeController.playerHandler = async function(req, res){
 }
 
 homeController.teamHandler = async function(req, res){
+    console.log('hello')
     var teamId = req.query.teamId
-    var seasonId = await seasonId()
-    var players = await TeamPlayersServices.getPlayers(seasonId, teamId)
+    var players = await TeamPlayersServices.getPlayers(await seasonId(), teamId)
+    res.json(players)
+    res.end()
 }
 
 module.exports = homeController

@@ -75,14 +75,19 @@
             </select>
         <div class="cond-prob__player-list">
             <label for="">Choose Player to get odds for</label>
+            <select class="cond-prob__selector" id="hplayer">
+                {{!-- FILLED WITH JS --}}
+            </select>
         </div>
-        <div class="cond-prob__opponent-team"></div>
+        <div class="cond-prob__opponent-team">
             <label>Choose Opponent Team</label>
             <select class="cond-prob__selector" id="ateam">
                 {{#each teams}}
                     <option value="{{this.team_id}}">{{this.team_shortName}}</option>
                 {{/each}}
             </select>
+        </div>
+
     </div>
     <div class="stats-player">
         <div class="player-name"></div>

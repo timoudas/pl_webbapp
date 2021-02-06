@@ -17,22 +17,24 @@ var SMA = function(valueArr, points){
     return targetArr
 }
 /********************************************************* */
-function handleSelectChange(event){
-    var selectElement = event.target;
-    var value = selectElement.value;
-    return value
-}
 
+/**
+ * Function to get player list for a specific team
+ */
 $(document).ready(function(){
-    var selector = document.getElementById("hteam");
-    teamId = selector.addEventListener('change', handleSelectChange);
-    console.log(teamId, 'hi')
-    $.ajax({
-        type: 'POST',
-        url: `/${teamId}?` + $.param({ teamId: teamId}), 
-        success: (data) => {
-            console.log(data)
-        }
+    $(document).on("change", "#hteam", function(){
+        const teamId = $('#hteam option:selected').val()
+        $.ajax({
+            type: 'POST',
+            url: `/probTeam/${teamId}?` + $.param({ teamId: teamId}), 
+            success: (data) => {
+                $('#hplayer').empty()
+                for (var i=0; i<data.length; ++i){
+                    playersHTML = `<option value="${data[i].playerId}">${data[i].playerName}</option>`
+                    $('#hplayer').append(playersHTML)
+                }       
+            }
+        })
     })
 })
 

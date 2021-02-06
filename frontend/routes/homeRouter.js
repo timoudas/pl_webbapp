@@ -8,8 +8,10 @@ const homeController = require('../controllers/homeController')
 // GET /
 router.get('/', homeController.index)
 router.post('/', homeController.filterHandler)
+
+// POST /
 router.post('/:playerId', homeController.playerHandler)
-router.post('/:teamId', homeController.teamHandler)
+router.post('/probTeam/:teamId', homeController.teamHandler)
 
 
 

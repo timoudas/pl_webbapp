@@ -182,6 +182,9 @@ async function getPlayers(seasonId, teamId){
         'playerName': '$_id.playerName',
         '_id': 0
     })
+    .sort({
+        'playerName': 1
+    })
     return data
 }
 
