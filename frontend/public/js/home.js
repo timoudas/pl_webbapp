@@ -16,6 +16,25 @@ var SMA = function(valueArr, points){
     }
     return targetArr
 }
+/********************************************************* */
+function handleSelectChange(event){
+    var selectElement = event.target;
+    var value = selectElement.value;
+    return value
+}
+
+$(document).ready(function(){
+    var selector = document.getElementById("hteam");
+    teamId = selector.addEventListener('change', handleSelectChange);
+    console.log(teamId, 'hi')
+    $.ajax({
+        type: 'POST',
+        url: `/${teamId}?` + $.param({ teamId: teamId}), 
+        success: (data) => {
+            console.log(data)
+        }
+    })
+})
 
 /********************************************************* */
 // Chart variables

@@ -1,6 +1,6 @@
 const { TeamSquadsModel } = require("../models/TeamSquads");
 const { TeamStandingsModel } = require("../models/TeamStandings");
-const { LeagueStatsModel } = require("../models/LeagueStanding");
+const { LeagueStatsModel, LeagueStandingsModel } = require("../models/LeagueStanding");
 const { FixtureStatsModel } = require("../models/FixtureStats");
 const utils = require('../services/utils.js')
 
@@ -52,20 +52,13 @@ async function getLatestGames(teamId){
  */
 async function getTeams(season){
     var season = parseInt(season)
-    var data = await TeamSquadsModel.aggregate()
+    var data = await LeagueStandingsModel.aggregate()
     .match({
         'seasonId': season
     })
-    .group({
-        '_id':{
-        'teamId': '$teamId',
-        'teamName': '$teamName',
-        'teamAbbr': '$teamAbbr'
-        } 
-    })
     .project({
-        'teamId': '$_id.teamId',
-        'teamName': '$_id.teamName',
+        'team_id': 1,
+        'team_shortName': 1,
         '_id': 0
     })
     .sort({
@@ -73,6 +66,7 @@ async function getTeams(season){
     })
     return data
 }
+
 
 async function getTeamProgress(teamId){
     var teamId = parseInt(teamId)

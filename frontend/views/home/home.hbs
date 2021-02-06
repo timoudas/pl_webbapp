@@ -58,10 +58,31 @@
     </div>
     <div class="cond-prob">
         <div class="prob-header">Calc Implied Probability Odds &#8805</div>
-        <div class="cond-prob__type"></div>
+        <div class="cond-prob__type">
+            <label>Choose stats</label>
+            <select class="cond-prob__selector">
+                <option value="1">Passes</option>
+                <option value="2">Shots</option>
+                <option value="3">Tackles</option>
+            </select>
+        </div>
         <div class="cond-prob__team-list"></div>
-        <div class="cond-prob__player-list"></div>
+            <label>Choose Team</label>
+            <select class="cond-prob__selector" id="hteam">
+                {{#each teams}}
+                    <option value="{{this.team_id}}">{{this.team_shortName}}</option>
+                {{/each}}
+            </select>
+        <div class="cond-prob__player-list">
+            <label for="">Choose Player to get odds for</label>
+        </div>
         <div class="cond-prob__opponent-team"></div>
+            <label>Choose Opponent Team</label>
+            <select class="cond-prob__selector" id="ateam">
+                {{#each teams}}
+                    <option value="{{this.team_id}}">{{this.team_shortName}}</option>
+                {{/each}}
+            </select>
     </div>
     <div class="stats-player">
         <div class="player-name"></div>

@@ -3,9 +3,15 @@
 const homeController = {}
 const ScheduleServices = require('../services/ScheduleService')
 const TeamPlayersServices = require('../services/TeamPlayersService')
+const TeamsServices = require('../services/TeamServices')
 const OddsServices = require('../services/OddsServices')
 const FixtureServices = require('../services/FixtureServices')
+const utils = require('../services/utils.js')
 
+var seasonId = async () => {
+    const result = await utils.latestSeasonId()   
+    return result
+}
 
 /**
  * Displays a start page.
@@ -18,7 +24,7 @@ homeController.index = async function (req, res) {
     res.locals.schedule = await ScheduleServices.getGameWeekSchedule()
     res.locals.passes = await TeamPlayersServices.getKeyPassPlayers()
     res.locals.shots = await TeamPlayersServices.getBestShotPlayers()
-
+    res.locals.teams = await TeamsServices.getTeams(await seasonId())
     res.render('home/home');
 }
 
@@ -44,6 +50,12 @@ homeController.playerHandler = async function(req, res){
     var playerInfo = await TeamPlayersServices.getPlayersInfo(queryval)
     res.json(playerInfo)
     res.end()
+}
+
+homeController.teamHandler = async function(req, res){
+    var teamId = req.query.teamId
+    var seasonId = await seasonId()
+    var players = await TeamPlayersServices.getPlayers(seasonId, teamId)
 }
 
 module.exports = homeController

@@ -9,6 +9,7 @@ const homeController = require('../controllers/homeController')
 router.get('/', homeController.index)
 router.post('/', homeController.filterHandler)
 router.post('/:playerId', homeController.playerHandler)
+router.post('/:teamId', homeController.teamHandler)
 
 
 
