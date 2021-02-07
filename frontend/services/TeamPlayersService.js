@@ -29,10 +29,10 @@ async function getPlayersInfo(playerId){
         'id': parseInt(playerId)
     })
     .lookup({
-        'from': 'fixture_stats',
+        'from': 'fixture_info',
         'let': {'id': '$f_id'},
         'pipeline': [
-            { '$match': {"$expr": { '$eq': [ "$f_id", "$$id" ] } } },
+            { '$match': {"$expr": { '$eq': [ "$fId", "$$id" ] } } },
          ],
         'as': 'fixtures'
     })
