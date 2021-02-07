@@ -6,6 +6,8 @@ from storage_config import StorageConfig
 
 dirs = Directory()
 
+DATABASE = 'PremierLeague'
+
 def DB_collections(collection_type):
     types = {'p': 'player_stats',
              't': 'team_standings',
