@@ -25,6 +25,7 @@ homeController.index = async function (req, res) {
     res.locals.passes = await TeamPlayersServices.getKeyPassPlayers()
     res.locals.shots = await TeamPlayersServices.getBestShotPlayers()
     res.locals.teams = await TeamsServices.getTeams(await seasonId())
+    res.locals.players = await TeamPlayersServices.getPlayers(await seasonId(), 1)
     res.render('home/home');
 }
 

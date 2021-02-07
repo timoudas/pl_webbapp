@@ -62,7 +62,7 @@ async function getTeams(season){
         '_id': 0
     })
     .sort({
-        'teamName': 1
+        'team_shortName': 1
     })
     return data
 }

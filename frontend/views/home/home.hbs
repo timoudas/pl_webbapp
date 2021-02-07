@@ -57,7 +57,7 @@
         </table>
     </div>
     <div class="cond-prob-container">
-        <div class="prob-header">Calc Implied Probability Odds &#8805</div>
+        <div class="cond-prob__header">Calc Implied Probability Odds &#8805</div>
         <div class="cond-prob__type">
             <label>Choose stats</label>
             <select class="cond-prob__selector">
@@ -77,8 +77,14 @@
         <div class="cond-prob__player-list">
             <label for="">Choose Player to get odds for</label>
             <select class="cond-prob__selector" id="hplayer">
-                {{!-- FILLED WITH JS --}}
+                {{#each players}}
+                    <option value="{{this.playerId}}">{{this.playerName}}</option>
+                {{/each}}
             </select>
+        </div>
+        <div class="con-prob__count">
+            <label for="">Over total</label>
+            <input type="text">
         </div>
         <div class="cond-prob__opponent-team">
             <label>Choose Opponent Team</label>
@@ -87,6 +93,9 @@
                     <option value="{{this.team_id}}">{{this.team_shortName}}</option>
                 {{/each}}
             </select>
+        </div>
+        <div class="cond-prob__submit">
+            <button>Submit</button>
         </div>
 
     </div>
