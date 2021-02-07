@@ -7,7 +7,7 @@ from pymongo import ReplaceOne
 
 from .get_schedule import get_schedule
 from .static import DB_collections
-from .static import collection_index
+from .static import collection_index, DATABASE
 from .static import load_file
 from .static import update_upstream
 from pymongo import MongoClient
@@ -16,7 +16,7 @@ from pymongo.errors import BulkWriteError
 
 class DBLeague():
 
-    def __init__(self, league, season, func=None, DB_NAME='PremierLeague'):
+    def __init__(self, league, season, func=None, DB_NAME=DATABASE):
         self.db_user = os.environ.get('DB_user')
         self.db_pass = os.environ.get('DB_pass')
         self.MONGODB_URL = f'mongodb+srv://{self.db_user}:{self.db_pass}@cluster0-mbqxj.mongodb.net/<dbname>?retryWrites=true&w=majority'
@@ -29,7 +29,8 @@ class DBLeague():
         self.pool = multiprocessing.cpu_count()
         self.playerfile = f'{self.league}_{self.season}_playerstats.json'
         self.teamfile = f'{self.league}_{self.season}_team_standings.json'
-        self.fixturefile = f'{self.league}_{self.season}_fixturestats.json'
+        self.fixture_info_file = f'{self.league}_{self.season}_fixture_info.json'
+        self.fixture_stats_file = f'{self.league}_{self.season}_fixture_stats.json'
         self.leaguefile = f'{self.league}_{self.season}_league_standings.json'
         self.player_fixture = f'{self.league}_{self.season}_player_fixture.json'
         self.team_squads = f'{self.league}_{self.season}_team_squads.json'
@@ -41,12 +42,12 @@ class DBLeague():
 
 def executePushPlayerLeague(db):
     updates = []
-    playerstats = load_file(db.playerfile)
+    player_stats = load_file(db.playerfile)
     collection_name = DB_collections('p')
     collection = db.DATABASE[collection_name]
     collection_index(collection, 'p_id', 'seasonId')
     print(f'Pushing updates to:  {collection_name}')
-    for player in playerstats:
+    for player in player_stats:
         updates.append(update_upstream({'p_id': player['p_id'],
                                         'seasonId': player['seasonId']}, player))
     try:
@@ -55,15 +56,31 @@ def executePushPlayerLeague(db):
         pprint(bwe.details)
     print('Done')
 
-def executePushFixtureLeague(db):
+def executePushFixtureStatsLeague(db):
     updates = []
-    fixturestats = load_file(db.fixturefile)
+    fixture_stats = load_file(db.fixture_stats_file)
     collection_name = DB_collections('f')
     collection = db.DATABASE[collection_name]
-    collection_index(collection, 'f_id', 'seasonId')
+    collection_index(collection, 'fId', 'seasonId')
     print(f'Pushing updates to:  {collection_name}')
-    for fixture in fixturestats:
-        updates.append(update_upstream({'f_id': fixture['f_id'],
+    for fixture in fixture_stats:
+        updates.append(update_upstream({'fId': fixture['fId'],
+        								'seasonId': fixture['seasonId']}, fixture))
+    try:
+        collection.bulk_write(updates)
+    except BulkWriteError as bwe:
+        pprint(bwe.details)
+    print('Done')
+
+def executePushFixtureInfoLeague(db):
+    updates = []
+    fixture_info = load_file(db.fixture_info_file)
+    collection_name = DB_collections('fi')
+    collection = db.DATABASE[collection_name]
+    collection_index(collection, 'fId', 'seasonId')
+    print(f'Pushing updates to:  {collection_name}')
+    for fixture in fixture_info:
+        updates.append(update_upstream({'fId': fixture['fId'],
         								'seasonId': fixture['seasonId']}, fixture))
     try:
         collection.bulk_write(updates)

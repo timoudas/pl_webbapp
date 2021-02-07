@@ -8,6 +8,7 @@ Options:
   -p  --player              Update PlayerStats.
   -t  --team                Update TeamStandings.
   -f  --fixture             Update FixtureStats.
+  -i  --info                Update FixtureInfo
   -l  --leauge              Update LeagueStandings.
   -e  --playerfixture       Update PlayerFixture.
   -s  --squads              Update TeamSquads
@@ -38,6 +39,7 @@ LOADING_CHOICES = {
     '-p': clean.playerstats,
     '-t': clean.team_standings,
     '-f': clean.fixturestats,
+    '-i': clean.fixtureinfo,
     '-l': clean.league_standings,
     '-e': clean.fixture_player_stats,
     '-s': clean.team_squads,
@@ -46,7 +48,8 @@ LOADING_CHOICES = {
 FILE_NAMES = {
     '-p':'playerstats',
     '-t': 'team_standings',
-    '-f': 'fixturestats',
+    '-f': 'fixture_stats',
+    '-i': 'fixture_info',
     '-l': 'league_standings',
     '-e': 'player_fixture',
     '-s': 'team_squads',
@@ -74,6 +77,7 @@ def loading_choices(type_stats, league, season):
     choices = {'-p': clean.playerstats,
                '-t': clean.team_standings,
                '-f': clean.fixturestats,
+               '-i': clean.fixture_info,
                '-l': clean.league_standings,
                '-e': clean.fixture_player_stats,
                '-s': clean.team_squads,}
@@ -83,7 +87,8 @@ def loading_choices(type_stats, league, season):
 def push_choices(type_stats, database):
     choices = {'-p': db.executePushPlayerLeague,
                '-t': db.executePushTeamLeague,
-               '-f': db.executePushFixtureLeague,
+               '-f': db.executePushFixtureStatsLeague,
+               '-i': db.executePushFixtureInfoLeague,
                '-l': db.executePushLeagueStandingsLeague,
                '-e': db.executePushFixturePlayerStatsLeague,
                '-s': db.executePushTeamSquadsLeague}
@@ -117,6 +122,7 @@ def dispatch(type_stats, league):
     choices = {'-p': update,
                '-t': update,
                '-f': update,
+               '-i': update,
                '-l': update,
                '-e': update,
                '-s': update}

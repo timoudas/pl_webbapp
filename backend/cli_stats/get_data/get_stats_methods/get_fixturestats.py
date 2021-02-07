@@ -6,6 +6,14 @@ import requests
 import re
 from tqdm import tqdm
 
+# FIX DB STRUCTURE 
+# ADD StRUCTURE TO ENABLE EASY QUERYING
+
+#GIT - COMMANDS TO WORK ON THIS
+# git checkout dbfix
+# maybe git pull
+
+
 class FixtureStats(Base):
 
     def __init__(self, *args, **kwargs):

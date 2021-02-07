@@ -1,5 +1,6 @@
 from .mongo_db_league import DBLeague
-from .mongo_db_league import executePushFixtureLeague
+from .mongo_db_league import executePushFixtureStatsLeague
+from .mongo_db_league import executePushFixtureInfoLeague
 from .mongo_db_league import executePushFixturePlayerStatsLeague
 from .mongo_db_league import executePushLeagueStandingsLeague
 from .mongo_db_league import executePushPlayerLeague

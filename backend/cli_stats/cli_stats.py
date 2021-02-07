@@ -29,13 +29,17 @@ from docopt import DocoptExit
 from docopt import docopt
 from pprint import pprint
 
-import clean_stats.clean_stats as clean
 
 from database import mongo_db as db
 
 from directory import Directory
-from get_data.get_stats import SeasonStats
 from storage_config import StorageConfig
+
+from static import loading_choices
+from static import push_choices
+from static import downloads_choices
+from static import CLEAN_LOADING_CHOICES, FILE_NAMES
+
 
 
 dir = Directory()
@@ -74,28 +78,11 @@ def docopt_cmd(func):
 
 class StatShell(cmd.Cmd):
 
-    LOADING_CHOICES = {
-        '-p': clean.playerstats,
-        '-t': clean.team_standings,
-        '-f': clean.fixturestats,
-        '-l': clean.league_standings,
-        '-e': clean.fixture_player_stats,
-        '-s': clean.team_squads,
-    }
-
-    FILE_NAMES = {
-        '-p':'playerstats',
-        '-t': 'team_standings',
-        '-f': 'fixturestats',
-        '-l': 'league_standings',
-        '-e': 'player_fixture',
-        '-s': 'team_squads',
-    }
 
     def __init__(self):
         super(StatShell, self).__init__()
         self.leagues = dir.load_json('season_params.json', StorageConfig.PARAMS_DIR)
-        self.db_clean_params = [param for param in self.LOADING_CHOICES.keys()]
+        self.db_clean_params = [param for param in CLEAN_LOADING_CHOICES.keys()]
 
 
     os.system('clear')
@@ -129,24 +116,6 @@ class StatShell(cmd.Cmd):
                 print("{: <10}".format(league), end="")
             print('\n')
 
-    def downloads_choices(self, type_stats, league, season):
-        """Returns an instance of a class that runs a download function
-            Args:
-                type_stats (str): One of below keys in the dict
-                league (str): A league abbreviation, ex. EN_PR
-                season (str): A valid season, ex 2019/2020
-        """
-        stats = SeasonStats()
-        choices = {'-p': ['player_stats', league, season],
-                   '-t': ['team_standings', league, season],
-                   '-f': ['fixture_stats', league, season],
-                   '-s': ['team_squad', league, season],
-                   '-l': ['league_standings', league, season],
-                   '-i': ['fixture_info', league, season],
-                   '-e': ['fixture_player_stats', league, season]}
-        params = choices.get(type_stats)
-        return stats(*params)
-
 
     @docopt_cmd
     def do_download(self, arg):
@@ -168,7 +137,7 @@ class StatShell(cmd.Cmd):
             season = str(arg['<SEASON>'][0] + '/' + season_end)
             for key, value in arg.items():
                 if value == True:
-                    self.downloads_choices(key, league, season)
+                    downloads_choices(key, league, season)
         else:
             for season in range(int(arg['<SEASON>'][0]), int(arg['<SEASON>'][-1])+1):
                 start_season = str(int(season))
@@ -176,18 +145,7 @@ class StatShell(cmd.Cmd):
                 temp_season = f'{start_season}/{end_season}'
                 for key, value in arg.items():
                     if value == True:
-                        self.downloads_choices(key, league, temp_season)
-
-
-    def loading_choices(self, type_stats, league, season):
-        choices = {'-p': clean.playerstats,
-                   '-t': clean.team_standings,
-                   '-f': clean.fixturestats,
-                   '-l': clean.league_standings,
-                   '-e': clean.fixture_player_stats,
-                   '-s': clean.team_squads,}
-        if type_stats in choices.keys():
-            return choices.get(type_stats)(league, season)
+                        downloads_choices(key, league, temp_season)
 
     @docopt_cmd
     def do_clean(self, arg):
@@ -196,7 +154,8 @@ class StatShell(cmd.Cmd):
         Options:
             -p,  --player         Playerstats
             -t,  --team           Team standings
-            -f,  --fixture        Fixturestats
+            -f,  --fixture        FixtureStats
+            -i,  --info           FixtureInfo
             -l,  --league         League Standings
             -e   --player_fixture Player Fixture Stats
             -s   --team_squads    Team Squads
@@ -207,25 +166,15 @@ class StatShell(cmd.Cmd):
         for key, value in arg.items():
             try:
                 if value == True:
-                    file_suffix = self.FILE_NAMES.get(key)
+                    file_suffix = FILE_NAMES.get(key)
                     file_name = f'{file_prefix}{file_suffix}'
                     if not dir.check_if_file_exist(StorageConfig.DB_DIR):
                         dir.mkdir(StorageConfig.DB_DIR)
-                    dir.save_json(file_name, self.loading_choices(key, league, season), StorageConfig.DB_DIR)
+                    dir.save_json(file_name, loading_choices(key, league, season), StorageConfig.DB_DIR)
                     print(f'{file_name} was saved')
             except FileExistsError:
                 print("Please check that", file_prefix, " exists")
 
-    def push_choices(self, type_stats, database):
-        choices = {'-p': db.executePushPlayerLeague,
-                   '-t': db.executePushTeamLeague,
-                   '-f': db.executePushFixtureLeague,
-                   '-l': db.executePushLeagueStandingsLeague,
-                   '-e': db.executePushFixturePlayerStatsLeague,
-                   '-s': db.executePushTeamSquadsLeague,
-                   '-d': db.executePushSchedule,}
-        if type_stats in choices.keys():
-            return choices.get(type_stats)(database)
 
     @docopt_cmd
     def do_db(self, arg):
@@ -235,6 +184,7 @@ class StatShell(cmd.Cmd):
             -p,  --player         Push Playerstats
             -t,  --team           Push Team standings
             -f,  --fixture        Push Fixturestats
+            -i,  --info           Push Fixturestats
             -l,  --league         Push League Standings
             -e,  --player_fixture Push Player Fixture Stats
             -s   --team_squads    Team Squads
@@ -244,7 +194,7 @@ class StatShell(cmd.Cmd):
         for key, value in arg.items():
             if value == True:
                 print("Pushing: ", arg['<LEAGUE>'].upper(), arg['<SEASON>'])
-                self.push_choices(key, database)
+                push_choices(key, database)
         print("Push completed")
 
     @docopt_cmd
@@ -262,16 +212,16 @@ class StatShell(cmd.Cmd):
 
             for i in download_params:
                 print("Downloading: ", i)
-                self.downloads_choices(i, league, season)
+                downloads_choices(i, league, season)
 
             for arg_key in self.db_clean_params:
-                file_suffix = self.FILE_NAMES.get(arg_key)
+                file_suffix = FILE_NAMES.get(arg_key)
                 file_name = f'{file_prefix}{file_suffix}'
                 print(file_name)
-                dir.save_json(file_name, self.loading_choices(arg_key, league, season), StorageConfig.DB_DIR)
+                dir.save_json(file_name, loading_choices(arg_key, league, season), StorageConfig.DB_DIR)
                 print(f'{file_name} was saved')
             for arg_key in self.db_clean_params:
-                self.push_choices(arg_key, database)
+                push_choices(arg_key, database)
 
 
 

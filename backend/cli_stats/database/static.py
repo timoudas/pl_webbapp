@@ -10,6 +10,7 @@ def DB_collections(collection_type):
     types = {'p': 'player_stats',
              't': 'team_standings',
              'f': 'fixture_stats',
+             'fi': 'fixture_info',
              'l': 'league_standings',
              'pf': 'fixture_players_stats',
              's': 'team_squads',

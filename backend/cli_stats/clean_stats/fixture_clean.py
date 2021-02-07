@@ -4,43 +4,53 @@ from .load_files import load_fixture_player_stats
 from .load_files import load_fixture_stats
 from pprint import pprint
 
-
+"""
+FIX SEASONLABEL/SEASON IS IN FIXTURE_STATS FUNCTION
+"""
 
 def read_fixtureinfo(data):
     info_all = []
     try:
         for d in data:
             stats_temp = {}
+            teams = []
+
             if 'info' in d:
                 stats = d['info']
                 home_team = stats['teams'][0]
                 away_team = stats['teams'][1]
+                team = {
+                    'team' : stats['teams'][0]['team']['name'],
+                    'teamId' : stats['teams'][0]['team']['club']['id'],
+                    'teamShortName' : stats['teams'][0]['team']['shortName'],
+                    'teamScore' : deep_get(home_team, 'score', default=0),
+                }
+                teams.append(team)
+                team = {
+                    'team' : stats['teams'][1]['team']['name'],
+                    'teamId' : stats['teams'][1]['team']['club']['id'],
+                    'teamShortName' : stats['teams'][1]['team']['shortName'],
+                    'teamScore' : deep_get(away_team, 'score', default=0),
+                }
+                teams.append(team)
                 stats_temp = \
                     {'gameweek_id' : deep_get(stats, 'gameweek.id'),
                     'seasonLabel' : deep_get(stats, 'gameweek.compSeason.label'),
                     'seasonId' : deep_get(stats, 'gameweek.compSeason.id'),
-                    'id' : stats['id'],
+                    'fId' : stats['id'],
 
                     'competition' : deep_get(stats, 'gameweek.compSeason.competition.description'),
-                    'competition_abbr' : deep_get(stats, 'gameweek.compSeason.competition.abbreviation'),
-                    'competition_id' : deep_get(stats, 'gameweek.compSeason.competition.id'),
+                    'competitionAbbr' : deep_get(stats, 'gameweek.compSeason.competition.abbreviation'),
+                    'competitionId' : deep_get(stats, 'gameweek.compSeason.competition.id'),
 
                     'gameweek' : deep_get(stats, 'gameweek.gameweek'),
-                    'kickoff' : deep_get(stats, 'kickoff.label'),
-                    'kickoff_millis' : deep_get(stats, 'kickoff.millis'),
-
-                    'home_team' : stats['teams'][0]['team']['name'],
-                    'home_team_id' : stats['teams'][0]['team']['club']['id'],
-                    'home_team_shortName' : stats['teams'][0]['team']['shortName'],
-                    'home_team_score' : deep_get(home_team, 'score', default=0),
-
-                    'away_team' : stats['teams'][1]['team']['name'],
-                    'away_team_id' : stats['teams'][1]['team']['club']['id'],
-                    'away_team_shortName' : stats['teams'][1]['team']['shortName'],
-                    'away_team_score' : deep_get(away_team, 'score', default=0),
+                    'kickoff' : deep_get(stats, 'provisionalKickoff.label'),
+                    'kickoffMillis' : deep_get(stats, 'provisionalKickoff.millis'),
+                    'kickoffComp': deep_get(stats, 'kickoff.completeness'),
+                    'teams': teams,
 
                     'ground' : deep_get(stats, 'ground.name'),
-                    'grounds_id' : deep_get(stats, 'ground.id'),
+                    'groundsId' : deep_get(stats, 'ground.id'),
 
                     'city' : deep_get(stats, 'ground.city'),
                     'fixtureType' : stats.get('fixtureType'),
@@ -48,53 +58,115 @@ def read_fixtureinfo(data):
                     'shootout' : stats.get('shootout'),
                     'status': stats.get('status'),
 
-                    'clock_label' : deep_get(stats, 'clock.label'),
-                    'clock_secs' : deep_get(stats, 'clock.secs'),}
+                    'clockLabel' : deep_get(stats, 'clock.label'),
+                    'clockSecs' : deep_get(stats, 'clock.secs'),}
                 info_all.append(stats_temp)
-    except TypeError as e:
+    except TypeError:
         print("Check that data exists and is loaded correctly")
     return info_all
 
 def read_fixturestats(data):
-    """In key "stats" followed by teamID followed by key "M"
-
-    """
+    """Returns a json object where each object represents a 
+    teams stats for a specific season"""
     try:
         stats_all = []
         for d in data:
             stats_temp = {}
-            stats_home = {}
-            stats_away = {}
             if not 'stats' in d:
                 try:
-                    stats_temp['id'] = d['info']['id']
+                    stats_temp['fId'] = deep_get(d, 'info.id')
+                    stats_temp['seasonLabel'] = d['info']['gameweek']['compSeason']['label']
+                    stats_temp['seasonId'] = deep_get(d, 'info.gameweek.compSeason.id')
                     stats_all.append(stats_temp)
                 except KeyError as e:
                     pass
             else:
                 stats = d['stats']
                 info = d['info']
-
                 home_id_key = str(info['teams'][0]['team']['club']['id'])
                 away_id_key = str(info['teams'][1]['team']['club']['id'])
-
+                data_home = {}
+                data_away = {}
 
                 if away_id_key in stats:
                     if home_id_key in stats:
-                        away = stats[away_id_key]['M']
+
                         home = stats[home_id_key]['M']
-                        stats_away = {'away_' + stats.get('name'): stats.get('value') for stats in away}
-                        stats_home = {'home_' + stats.get('name'): stats.get('value') for stats in home}
-                        stats_temp.update(stats_away)
-                        stats_temp.update(stats_home)
-                        stats_temp.update({'id' : info['id']})
+                        data_home['seasonLabel'] = d['info']['gameweek']['compSeason']['label']
+                        data_home['seasonId'] = deep_get(info, 'gameweek.compSeason.id')
+                        data_home['fId'] = deep_get(info, 'id')
+                        data_home['teamId'] = home_id_key
+                        data_home.update({stats.get('name'): stats.get('value') for stats in home})
+                        
+                        away = stats[away_id_key]['M']
+                        data_away['seasonLabel'] = d['info']['gameweek']['compSeason']['label']
+                        data_away['seasonId'] = deep_get(info, 'gameweek.compSeason.id')
+                        data_away['fId'] = deep_get(info, 'id')
+                        data_away['teamId'] = away_id_key
+                        data_away.update({stats.get('name'): stats.get('value') for stats in away})
 
-    
-
-                stats_all.append(stats_temp)
+                stats_all.append(data_home)
+                stats_all.append(data_away)
         return stats_all
     except TypeError as e:
         print(e, "Check that data exists and is loaded correctly")
+
+def get_match_officials(officials):
+    match_officals_temp = \
+    {'role': deep_get(officials, 'role'),
+        'matchOfficialId': officials['matchOfficialId'],
+        'first': deep_get(officials, 'name.first'),
+        'last': deep_get(officials, 'name.last'),
+        'name': deep_get(officials, 'name.display'),
+        'm_id': officials['id']
+    }
+    return match_officals_temp
+
+def get_events(event):
+    events_temp = \
+    {'clockSecs': deep_get(event, 'clock.secs'),
+        'clockLabel': deep_get(event, 'clock.label'),
+        'phase': deep_get(event, 'phase'),
+        'type': deep_get(event, 'type'),
+        'timeMillis': deep_get(event, 'time.millis'),
+        'timeLabel': deep_get(event, 'time.label'),
+        'homeScore': deep_get(event, 'score.homeScore'),
+        'awayScore': deep_get(event, 'score.awayScore'),
+        'id': deep_get(event, 'id'),
+    }
+    return events_temp
+
+def get_substitutes(sub, team_id):
+    substitutes_temp = \
+    {'teamId': team_id,
+        'matchPosition': deep_get(sub, 'matchPosition'),
+        'captain': deep_get(sub, 'captain'),
+        'playerId': deep_get(sub, 'playerId'),
+        'position': deep_get(sub, 'info.position'),
+        'shirtNum': deep_get(sub, 'info.shirtNum'),
+        'positionInfo': deep_get(sub, 'info.positionInfo'),
+        'name': deep_get(sub, 'name.display'),
+        'first': deep_get(sub, 'name.first'),
+        'last': deep_get(sub, 'name.last'),
+        'id': sub['id']
+    }
+    return substitutes_temp
+
+def get_lineup(line, team_id):
+    lineup_temp = \
+        {'teamId': team_id,
+        'matchPosition': deep_get(line, 'matchPosition'),
+        'captain': deep_get(line, 'captain'),
+        'playerId': deep_get(line, 'playerId'),
+        'position': deep_get(line, 'info.position'),
+        'shirtNum': deep_get(line, 'info.shirtNum'),
+        'positionInfo': deep_get(line, 'info.positionInfo'),
+        'name': deep_get(line, 'name.display'),
+        'first': deep_get(line, 'name.first'),
+        'last': deep_get(line, 'name.last'),
+        'id': line['id'],
+    }
+    return lineup_temp
 
 def read_fixture_events(data):
     info_all = []
@@ -104,28 +176,18 @@ def read_fixture_events(data):
         team_list = d['teamLists']
         events = d['events']
         stats_temp = \
-            { 'home_halftime' : half_time['homeScore'],
-              'away_halftime' : half_time['awayScore'],
+            { 'homeHalfTimeScore' : half_time['homeScore'],
+              'awayHalfTimeScore' : half_time['awayScore'],
               'matchOfficials': [],
               'lineUps': [],
               'substitutes': [],
               'events' : [],
-              'id': d['id'],
-              'f_id': d['id'],
+              'fId': d['id'],
               'formation':[],
-
         }
         for official in match_officals:
-            match_officals_temp = {}
-            match_officals_temp = \
-            {'role': deep_get(official, 'role'),
-             'matchOfficialId': official['matchOfficialId'],
-             'first': deep_get(official, 'name.first'),
-             'last': deep_get(official, 'name.last'),
-             'name': deep_get(official, 'name.display'),
-             'm_id': official['id']
-            }
-            stats_temp['matchOfficials'].append(match_officals_temp)
+            data = get_match_officials(official)
+            stats_temp['matchOfficials'].append(data)            
 
         for lineups in team_list:
             if lineups:
@@ -139,57 +201,18 @@ def read_fixture_events(data):
                 'players': deep_get(formation, 'players')
                 }
                 stats_temp['formation'].append(formation_temp)
-                for l in linup:
-                    lineup_temp = {}
-                    lineup_temp = \
-                    {'teamId': team_id,
-                     'matchPosition': deep_get(l, 'matchPosition'),
-                     'captain': deep_get(l, 'captain'),
-                     'playerId': deep_get(l, 'playerId'),
-                     'position': deep_get(l, 'info.position'),
-                     'shirtNum': deep_get(l, 'info.shirtNum'),
-                     'positionInfo': deep_get(l, 'info.positionInfo'),
-                     'name': deep_get(l, 'name.display'),
-                     'first': deep_get(l, 'name.first'),
-                     'last': deep_get(l, 'name.last'),
-                     'id': l['id'],
-                    }
-                    stats_temp['lineUps'].append(lineup_temp)
+                for line in linup:
+                    data = get_lineup(line, team_id)
+                    stats_temp['lineUps'].append(data)
 
-                for s in substitutes:
-                    substitutes_temp = {}
-                    substitutes_temp = \
-                    {'teamId': team_id,
-                     'matchPosition': deep_get(s, 'matchPosition'),
-                     'captain': deep_get(s, 'captain'),
-                     'playerId': deep_get(s, 'playerId'),
-                     'position': deep_get(s, 'info.position'),
-                     'shirtNum': deep_get(s, 'info.shirtNum'),
-                     'positionInfo': deep_get(s, 'info.positionInfo'),
-                     'name': deep_get(s, 'name.display'),
-                     'first': deep_get(s, 'name.first'),
-                     'last': deep_get(s, 'name.last'),
-                     'id': s['id']
-                    }
-                
-                    stats_temp['substitutes'].append(substitutes_temp)
+                for sub in substitutes:
+                    data = get_substitutes(sub, team_id)
+                    stats_temp['substitutes'].append(data)
 
         for event in events:
             if event:
-                events_temp = {}
-                events_temp = \
-                {'clockSecs': deep_get(event, 'clock.secs'),
-                 'clockLabel': deep_get(event, 'clock.label'),
-                 'phase': deep_get(event, 'phase'),
-                 'type': deep_get(event, 'type'),
-                 'timeMillis': deep_get(event, 'time.millis'),
-                 'timeLabel': deep_get(event, 'time.label'),
-                 'homeScore': deep_get(event, 'score.homeScore'),
-                 'awayScore': deep_get(event, 'score.awayScore'),
-                 'id': deep_get(event, 'id'),
-                }
-            stats_temp['events'].append(events_temp)
-
+                data = get_events(event)
+                stats_temp['events'].append(data)
 
         info_all.append(stats_temp)
     return info_all
@@ -235,17 +258,21 @@ def read_player_fixture_all(data):
     except TypeError as e:
         print("Check that data exists and is loaded correctly")
 
-def fixturestats(league, year):
+def fixtureinfo(league, year):
+    """Concats fixture info and fixture events and returns a json object
+    """
     info = read_fixtureinfo(load_fixture_stats(league, year))
-    stats = read_fixturestats(load_fixture_stats(league, year))
     events = read_fixture_events(load_fixture_info(league, year))
 
+    fixture_merged = [{**x, **y} for y in info for x in events if x['fId'] == y['fId']]
+    fixture_merged_sorted = [dict(sorted(d.items())) for d in fixture_merged]
+    return fixture_merged_sorted
 
-    #Mergers the two list of dicts if `id-key` is the same
-    fixture_merged = [{**x, **y} for y in info for x in stats if x['id'] == y['id']]
-    merge_events = [{**x, **y} for y in fixture_merged for x in events if x['id'] == y['id']]
-    d = [dict(sorted(d.items())) for d in merge_events]
-    return d
+def fixturestats(league, year):
+    """Returns fixture stats in a json object
+    """
+    stats = read_fixturestats(load_fixture_stats(league, year))
+    return stats
 
 def fixture_player_stats(league, year):
     players_info = read_player_fixture_all(load_fixture_player_stats(league, year))
