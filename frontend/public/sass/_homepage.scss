@@ -58,14 +58,35 @@
 #player-clickable-row{
     cursor: pointer;
 }
+// **********************************
 
-.cond-prob {
+.cond-prob-container {
     box-shadow: $box-shadow;
     margin-left: 27px;
     margin-bottom: 27px;
+    display: grid;
+    grid-template-rows: repeat(5, 70px);
 }
 
 
+.cond-prob__type{
+
+}
+
+.cond-prob__team-list {
+
+}
+
+.cond-prob__player-list {
+
+}
+
+.cond-prob__opponent-team {
+
+}
+
+
+// ********************************
 .stats-player {
     grid-area: 2 / 2 / -1 / -1;
     display: grid;
