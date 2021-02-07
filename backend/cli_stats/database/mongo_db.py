@@ -8,13 +8,6 @@ from .mongo_db_league import executePushSchedule
 from .mongo_db_league import executePushTeamLeague
 from .mongo_db_league import executePushTeamSquadsLeague
 
-from .mongo_db_year import DB
-from .mongo_db_year import executePushFixture
-from .mongo_db_year import executePushFixturePlayerStats
-from .mongo_db_year import executePushLeagueStandings
-from .mongo_db_year import executePushPlayer
-from .mongo_db_year import executePushTeam
-from .mongo_db_year import executePushTeamSquads
 
 if __name__ == '__main__':
     pass

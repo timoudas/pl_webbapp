@@ -29,7 +29,8 @@ DB_PUSH_CHOICES = {
     '-i': db.executePushFixtureInfoLeague,
     '-l': db.executePushLeagueStandingsLeague,
     '-e': db.executePushFixturePlayerStatsLeague,
-    '-s': db.executePushTeamSquadsLeague
+    '-s': db.executePushTeamSquadsLeague,
+    '-d': db.executePushSchedule
     }
 
 FILE_NAMES = {
