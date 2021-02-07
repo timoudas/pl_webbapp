@@ -46,6 +46,7 @@ def read_fixtureinfo(data):
                     'gameweek' : deep_get(stats, 'gameweek.gameweek'),
                     'kickoff' : deep_get(stats, 'provisionalKickoff.label'),
                     'kickoffMillis' : deep_get(stats, 'provisionalKickoff.millis'),
+                    'kickoffComp': deep_get(stats, 'kickoff.completeness'),
                     'teams': teams,
 
                     'ground' : deep_get(stats, 'ground.name'),

@@ -7,7 +7,7 @@ from pymongo import ReplaceOne
 
 from .get_schedule import get_schedule
 from .static import DB_collections
-from .static import collection_index
+from .static import collection_index, DATABASE
 from .static import load_file
 from .static import update_upstream
 from pymongo import MongoClient
@@ -16,7 +16,7 @@ from pymongo.errors import BulkWriteError
 
 class DBLeague():
 
-    def __init__(self, league, season, func=None, DB_NAME='PremierLeague_test'):
+    def __init__(self, league, season, func=None, DB_NAME=DATABASE):
         self.db_user = os.environ.get('DB_user')
         self.db_pass = os.environ.get('DB_pass')
         self.MONGODB_URL = f'mongodb+srv://{self.db_user}:{self.db_pass}@cluster0-mbqxj.mongodb.net/<dbname>?retryWrites=true&w=majority'
