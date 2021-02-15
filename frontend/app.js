@@ -49,8 +49,7 @@ app.use(bodyParser.json())
 // Routing
 app.use('/', require('./routes/homeRouter'))
 app.use('/table', require('./routes/tableRouter'))
-app.use('/players', require('./routes/playerRouter'))
-app.use('/teams', require('./routes/teamRouter'))
+
 
 
 io.on('connection', (socket) => {

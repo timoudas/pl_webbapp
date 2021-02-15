@@ -8,13 +8,13 @@ html,body {
     height:auto;
     font-family: Sans-serif;
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 1fr;
     grid-template-rows: 50px 1fr 50px;
     grid-auto-columns: minmax(min-content, max-content);
     grid-template-areas:
-      "sidenav headers"
-      "sidenav main"
-      "sidenav main";
+      "headers"
+      "main"
+      "main";
 }
 
 .sidenav {
@@ -32,18 +32,9 @@ html,body {
 }
 .header {
     grid-area: headers;
-
-  button {
-    background-color: inherit;
-    border: none;
-    outline: none;
-    height: 40px;
-    width: 40px;
-    img {
-        height: inherit;
-        width: inherit;
+    li {
+        display: inline-block;
     }
-  }
 }
 
 .header, .footer {
