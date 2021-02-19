@@ -24,9 +24,9 @@ class DBLeague():
         self.season = str(season)
         self.client = MongoClient(self.MONGODB_URL)
         self.DATABASE = self.client[DB_NAME]
-
-
         self.pool = multiprocessing.cpu_count()
+        self.func = func
+
         self.playerfile = f'{self.league}_{self.season}_playerstats.json'
         self.teamfile = f'{self.league}_{self.season}_team_standings.json'
         self.fixture_info_file = f'{self.league}_{self.season}_fixture_info.json'
@@ -34,6 +34,20 @@ class DBLeague():
         self.leaguefile = f'{self.league}_{self.season}_league_standings.json'
         self.player_fixture = f'{self.league}_{self.season}_player_fixture.json'
         self.team_squads = f'{self.league}_{self.season}_team_squads.json'
+
+    def execute(self):
+        if self.func is not None:
+            return self.func(self)
+
+class DBSchedule():
+
+    def __init__(self, func=None, DB_NAME=DATABASE):
+        self.db_user = os.environ.get('DB_user')
+        self.db_pass = os.environ.get('DB_pass')
+        self.MONGODB_URL = f'mongodb+srv://{self.db_user}:{self.db_pass}@cluster0-mbqxj.mongodb.net/<dbname>?retryWrites=true&w=majority'
+        self.client = MongoClient(self.MONGODB_URL)
+        self.DATABASE = self.client[DB_NAME]
+        self.pool = multiprocessing.cpu_count()
         self.func = func
 
     def execute(self):
