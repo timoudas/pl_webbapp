@@ -59,7 +59,7 @@ def read_fixtureinfo(data):
                     'status': stats.get('status'),
 
                     'clockLabel' : deep_get(stats, 'clock.label', default=0),
-                    'clockSecs' : deep_get(stats, 'clock.secs', default=0)}
+                    'clockSecs' : deep_get(stats, 'clock.secs', default=0)  }
                 info_all.append(stats_temp)
     except TypeError:
         print("Check that data exists and is loaded correctly")

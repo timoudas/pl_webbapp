@@ -34,7 +34,7 @@ def load_file(file):
         print("Please check that", file, "exists")
 
 
-def collection_index(collection, index, *args):
+def collection_index(collection, index, *args, unique=True):
     """Checks if index exists for collection, 
     and return a new index if not
 
@@ -45,7 +45,7 @@ def collection_index(collection, index, *args):
     """
     compound_index = tuple((arg, ASCENDING) for arg in args)
     if index not in collection.index_information():
-        return collection.create_index([(index, DESCENDING), *compound_index], unique=True)
+        return collection.create_index([(index, DESCENDING), *compound_index], unique)
 
 def update_upstream(index_dict, record):
     """Update record in collection

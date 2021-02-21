@@ -75,7 +75,7 @@ def executePushFixtureStatsLeague(db):
     fixture_stats = load_file(db.fixture_stats_file)
     collection_name = DB_collections('f')
     collection = db.DATABASE[collection_name]
-    collection_index(collection, 'fId', 'seasonId')
+    collection_index(collection, 'fId', 'seasonId', unique=False)
     print(f'Pushing updates to:  {collection_name}')
     for fixture in fixture_stats:
         updates.append(update_upstream({'fId': fixture['fId'],
