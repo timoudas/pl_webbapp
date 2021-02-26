@@ -1,0 +1,15 @@
+cli_stats.py is an interactive comandline interface that contains the main functions of the program.
+
+---Realtime data gathering---
+
+
+
+At 23:59 the schedule is downloaded and function queries the schedule collection and 
+checks if
+
+    "status": "C" 
+and
+    kickoff.millis - datetime.datetime.now().timestamp() <= 24H
+
+this ensures that only resent completed games are captured.
+The teamIds and
