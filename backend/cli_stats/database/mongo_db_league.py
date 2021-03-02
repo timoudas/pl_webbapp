@@ -75,11 +75,12 @@ def executePushFixtureStatsLeague(db):
     fixture_stats = load_file(db.fixture_stats_file)
     collection_name = DB_collections('f')
     collection = db.DATABASE[collection_name]
-    collection_index(collection, 'fId', 'seasonId', unique=False)
+    collection_index(collection, 'fId', 'seasonId', 'teamId')
     print(f'Pushing updates to:  {collection_name}')
     for fixture in fixture_stats:
         updates.append(update_upstream({'fId': fixture['fId'],
-        								'seasonId': fixture['seasonId']}, fixture))
+        								'seasonId': fixture['seasonId'],
+                                        'teamId': fixture['teamId']}, fixture))
     try:
         collection.bulk_write(updates)
     except BulkWriteError as bwe:

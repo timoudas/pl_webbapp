@@ -72,12 +72,22 @@ def read_fixturestats(data):
         stats_all = []
         for d in data:
             stats_temp = {}
+            data_home = {}
+            data_away = {}
             if not 'stats' in d:
                 try:
-                    stats_temp['fId'] = deep_get(d, 'info.id')
-                    stats_temp['seasonLabel'] = d['info']['gameweek']['compSeason']['label']
-                    stats_temp['seasonId'] = deep_get(d, 'info.gameweek.compSeason.id')
-                    stats_all.append(stats_temp)
+                    data_home['teamId'] = str(d['info']['teams'][0]['team']['club']['id'])
+                    data_home['fId'] = deep_get(d, 'info.id')
+                    data_home['seasonLabel'] = d['info']['gameweek']['compSeason']['label']
+                    data_home['seasonId'] = deep_get(d, 'info.gameweek.compSeason.id')
+
+                    data_away['teamId'] = str(d['info']['teams'][1]['team']['club']['id'])
+                    data_away['fId'] = deep_get(d, 'info.id')
+                    data_away['seasonLabel'] = d['info']['gameweek']['compSeason']['label']
+                    data_away['seasonId'] = deep_get(d, 'info.gameweek.compSeason.id')
+
+                    stats_all.append(data_home)
+                    stats_all.append(data_away)
                 except KeyError as e:
                     pass
             else:

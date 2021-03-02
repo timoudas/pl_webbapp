@@ -45,7 +45,7 @@ def collection_index(collection, index, *args, unique=True):
     """
     compound_index = tuple((arg, ASCENDING) for arg in args)
     if index not in collection.index_information():
-        return collection.create_index([(index, DESCENDING), *compound_index], unique)
+        return collection.create_index([(index, DESCENDING), *compound_index], unique=True)
 
 def update_upstream(index_dict, record):
     """Update record in collection
